@@ -1,0 +1,6 @@
+# Allow all crawlers
+User-agent: *
+Allow: /
+
+# Sitemap (update URL when deployed)
+Sitemap: https://abhirajsingh.dev/sitemap.xml
