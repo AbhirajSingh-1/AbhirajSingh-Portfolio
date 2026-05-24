@@ -31,9 +31,9 @@ const socialLinks = [
 ];
 
 const emailjsConfig = {
-  serviceId: import.meta.env.VITE_EMAILJS_SERVICE_ID,
-  templateId: import.meta.env.VITE_EMAILJS_TEMPLATE_ID,
-  publicKey: import.meta.env.VITE_EMAILJS_PUBLIC_KEY,
+  serviceId: 'service_xd3knck',
+  templateId: 'template_izhtc9e',
+  publicKey: 'Oh2ZJVifwgaL4g1H4',
 };
 
 const Contact = () => {
