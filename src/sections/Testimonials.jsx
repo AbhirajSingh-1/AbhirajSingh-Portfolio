@@ -1,11 +1,12 @@
-import { MessageCircle, Star } from 'lucide-react';
+import { Star } from 'lucide-react';
 import SectionHeading from '../components/SectionHeading';
+import { useRevealGroup } from '../hooks/useReveal';
 
 const testimonials = [
   {
-    name: 'Subham Kashyap',
-    role: 'Sh1eld tech infosec solutions CEO',
-    text: 'Abhiraj delivered an exceptional tourism website that captures the beauty of Sikkim with a responsive, modern interface.',
+    name: 'Sagar Anand',
+    role: 'Portfolio Website Client',
+    text: 'Abhiraj built an amazing portfolio website for me. It looks stunning, loads fast, and perfectly represents my personal brand. Highly recommend his work!',
     rating: 5,
   },
   {
@@ -23,42 +24,54 @@ const testimonials = [
   {
     name: 'Roshan Rawat',
     role: 'Freepathshala NGO Founder',
-    text: 'Working with Abhiraj was a great experience. The FreePathshala platform is well-designed, responsive, and makes donation pickup and tracking management simple and efficient for users.',
+    text: 'Working with Abhiraj was a great experience. The FreePathshala platform is well-designed, responsive, and makes donation pickup and tracking management simple and efficient.',
     rating: 5,
   },
 ];
 
 const Testimonials = () => {
+  const gridRef = useRevealGroup({ threshold: 0.08 });
+
   return (
     <section id="testimonials" className="section">
       <SectionHeading
         title="Client Testimonials"
+        overline="06 — Reviews"
         subtitle="What people say about working with me"
       />
 
-      <div className="testimonial-grid">
+      <div ref={gridRef} className="testimonial-grid">
         {testimonials.map((testimonial) => (
           <article
             key={`${testimonial.name}-${testimonial.role}`}
-            className="testimonial-item glass-card"
+            className="testimonial-item glass-card reveal-item"
           >
-            <MessageCircle className="testimonial-icon" aria-hidden="true" />
+            {/* Decorative quote mark */}
+            <span className="testimonial-quote-mark" aria-hidden="true">&ldquo;</span>
 
-            <p className="testimonial-text">&ldquo;{testimonial.text}&rdquo;</p>
+            {/* Quote */}
+            <p className="testimonial-text">
+              {testimonial.text}
+            </p>
 
-            <div className="testimonial-rating" aria-label={`${testimonial.rating} star rating`}>
-              {Array.from({ length: testimonial.rating }).map((_, index) => (
-                <Star key={index} size={16} aria-hidden="true" />
+            {/* Stars */}
+            <div
+              className="testimonial-rating"
+              aria-label={`${testimonial.rating} out of 5 stars`}
+            >
+              {Array.from({ length: testimonial.rating }).map((_, i) => (
+                <Star key={i} size={15} aria-hidden="true" />
               ))}
             </div>
 
+            {/* Author */}
             <div className="testimonial-author">
               <div className="testimonial-avatar" aria-hidden="true">
                 {testimonial.name.charAt(0)}
               </div>
               <div>
-                <p>{testimonial.name}</p>
-                <span>{testimonial.role}</span>
+                <p className="testimonial-author-name">{testimonial.name}</p>
+                <span className="testimonial-author-role">{testimonial.role}</span>
               </div>
             </div>
           </article>

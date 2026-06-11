@@ -1,6 +1,7 @@
 import { ExternalLink } from 'lucide-react';
 import { GithubIcon, LinkedinIcon, InstagramIcon } from '../components/SocialIcons';
 import SectionHeading from '../components/SectionHeading';
+import { useRevealGroup } from '../hooks/useReveal';
 
 const profiles = [
   {
@@ -11,7 +12,6 @@ const profiles = [
     url: 'https://github.com/AbhirajSingh-1',
     icon: GithubIcon,
     color: '#8b949e',
-    bgGlow: 'rgba(139, 148, 158, 0.15)',
   },
   {
     name: 'LinkedIn',
@@ -21,7 +21,6 @@ const profiles = [
     url: 'https://www.linkedin.com/in/abhirajsingh1306',
     icon: LinkedinIcon,
     color: '#0a66c2',
-    bgGlow: 'rgba(10, 102, 194, 0.15)',
   },
   {
     name: 'Instagram',
@@ -31,43 +30,34 @@ const profiles = [
     url: 'https://www.instagram.com/abhiiiraj.singh/',
     icon: InstagramIcon,
     color: '#e4405f',
-    bgGlow: 'rgba(228, 64, 95, 0.15)',
   },
 ];
 
 const Profiles = () => {
+  const gridRef = useRevealGroup({ threshold: 0.1 });
+
   return (
     <section id="profiles" className="section">
       <SectionHeading
         title="Connect With Me"
+        overline="07 — Connect"
         subtitle="Find me on these platforms"
       />
 
-      <div className="profile-grid">
-        {profiles.map((profile, index) => {
+      <div ref={gridRef} className="profile-grid">
+        {profiles.map((profile) => {
           const Icon = profile.icon;
           return (
-            <div
-              key={index}
-              className="profile-card-item glass-card"
-            >
+            <div key={profile.name} className="profile-card-item glass-card reveal-item">
               <Icon
                 className="profile-icon"
                 style={{ color: profile.color }}
                 aria-hidden="true"
               />
 
-              <h3 className="profile-title font-heading">
-                {profile.name}
-              </h3>
-
-              <p className="profile-username">
-                {profile.username}
-              </p>
-
-              <p className="profile-description">
-                {profile.description}
-              </p>
+              <h3 className="profile-title font-heading">{profile.name}</h3>
+              <p className="profile-username font-mono">{profile.username}</p>
+              <p className="profile-description">{profile.description}</p>
 
               <a
                 href={profile.url}

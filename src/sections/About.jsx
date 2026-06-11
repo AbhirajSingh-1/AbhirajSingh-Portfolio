@@ -1,10 +1,11 @@
 import { useEffect, useRef, useState } from 'react';
 import SectionHeading from '../components/SectionHeading';
+import { useReveal, useRevealGroup } from '../hooks/useReveal';
 import aboutImage from '../assets/projects/ME2.webp';
 
 const stats = [
   { target: 15, suffix: '+', label: 'Projects Completed' },
-  { target: 5, suffix: '+', label: 'Client Projects' },
+  { target: 5,  suffix: '+', label: 'Client Projects' },
   { target: 13, suffix: '+', label: 'Technologies Used' },
   { target: 10, suffix: '+', label: 'Responsive Websites' },
 ];
@@ -21,7 +22,6 @@ function AnimatedCounter({ target, suffix }) {
     const observer = new IntersectionObserver(
       ([entry]) => {
         if (!entry.isIntersecting || hasAnimated.current) return;
-
         hasAnimated.current = true;
 
         if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
@@ -29,7 +29,7 @@ function AnimatedCounter({ target, suffix }) {
           return;
         }
 
-        const duration = 1100;
+        const duration = 1300;
         const startTime = performance.now();
         let frameId;
 
@@ -37,16 +37,13 @@ function AnimatedCounter({ target, suffix }) {
           const progress = Math.min((now - startTime) / duration, 1);
           const eased = 1 - Math.pow(1 - progress, 3);
           setCount(Math.floor(eased * target));
-
-          if (progress < 1) {
-            frameId = requestAnimationFrame(animate);
-          }
+          if (progress < 1) frameId = requestAnimationFrame(animate);
         };
 
         frameId = requestAnimationFrame(animate);
         return () => cancelAnimationFrame(frameId);
       },
-      { threshold: 0.35 }
+      { threshold: 0.4 }
     );
 
     observer.observe(element);
@@ -62,15 +59,21 @@ function AnimatedCounter({ target, suffix }) {
 }
 
 export default function About() {
+  const imageRef  = useReveal({ threshold: 0.15 });
+  const copyRef   = useRevealGroup({ threshold: 0.1 });
+  const statsRef  = useRevealGroup({ threshold: 0.1 });
+
   return (
     <section id="about" className="section">
       <SectionHeading
         title="About Me"
+        overline="02 — About"
         subtitle="Focused on fast, responsive, and polished web experiences"
       />
 
       <div className="about-grid">
-        <div className="about-panel glass-card about-image-panel">
+        {/* Image panel */}
+        <div ref={imageRef} className="about-image-panel reveal">
           <img
             src={aboutImage}
             alt="Abhiraj Singh working on a web project"
@@ -82,22 +85,22 @@ export default function About() {
             sizes="(max-width: 768px) 100vw, (max-width: 1024px) 50vw, 45vw"
           />
           <div className="about-image-overlay">
-            <span className="about-image-kicker">About me</span>
+            <p className="about-image-kicker">About me</p>
             <strong>Clean builds, thoughtful interfaces, reliable delivery</strong>
           </div>
         </div>
 
-        <div className="about-copy">
-          <p>
+        {/* Copy */}
+        <div ref={copyRef} className="about-copy-wrapper">
+          <p className="reveal-item">
             I&apos;m a Full Stack Developer and Creative Web Designer who enjoys
-            turning ideas into reliable, scalable, and visually clean digital
-            products.
+            turning ideas into reliable, scalable, and visually clean digital products.
           </p>
-          <p>
-            My work centers on React.js, MERN Stack, REST APIs, AI integrations,
+          <p className="reveal-item">
+            My work centres on React.js, MERN Stack, REST APIs, AI integrations,
             and modern UI systems that feel smooth without becoming heavy.
           </p>
-          <p>
+          <p className="reveal-item">
             I build responsive websites for startups, businesses, NGOs, and
             agencies with a practical focus on speed, accessibility, and clear
             user journeys.
@@ -105,10 +108,11 @@ export default function About() {
         </div>
       </div>
 
-      <div className="stats-grid">
+      {/* Stats */}
+      <div ref={statsRef} className="stats-grid">
         {stats.map((stat) => (
-          <div key={stat.label} className="stat-card glass-card">
-            <div className="stat-value gradient-text">
+          <div key={stat.label} className="stat-card glass-card reveal-item">
+            <div className="stat-value">
               <AnimatedCounter target={stat.target} suffix={stat.suffix} />
             </div>
             <div className="stat-label">{stat.label}</div>

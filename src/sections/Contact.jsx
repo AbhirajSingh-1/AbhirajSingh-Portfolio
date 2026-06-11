@@ -1,14 +1,9 @@
 import { useEffect, useRef, useState } from 'react';
 import emailjs from '@emailjs/browser';
-import {
-  Check,
-  Mail,
-  Phone,
-  Send,
-  AlertCircle,
-} from 'lucide-react';
+import { Check, Mail, Phone, Send, AlertCircle } from 'lucide-react';
 import { GithubIcon, LinkedinIcon, InstagramIcon, WhatsappIcon } from '../components/SocialIcons';
 import SectionHeading from '../components/SectionHeading';
+import { useReveal } from '../hooks/useReveal';
 
 const contactDetails = [
   {
@@ -24,43 +19,41 @@ const contactDetails = [
 ];
 
 const socialLinks = [
-  { icon: GithubIcon, href: 'https://github.com/AbhirajSingh-1', label: 'GitHub' },
-  { icon: LinkedinIcon, href: 'https://www.linkedin.com/in/abhirajsingh1306', label: 'LinkedIn' },
-  { icon: InstagramIcon, href: 'https://www.instagram.com/abhiiiraj.singh/', label: 'Instagram' },
-  { icon: WhatsappIcon, href: 'https://wa.me/917782905151', label: 'WhatsApp' },
+  { icon: GithubIcon,   href: 'https://github.com/AbhirajSingh-1',             label: 'GitHub' },
+  { icon: LinkedinIcon, href: 'https://www.linkedin.com/in/abhirajsingh1306',   label: 'LinkedIn' },
+  { icon: InstagramIcon,href: 'https://www.instagram.com/abhiiiraj.singh/',      label: 'Instagram' },
+  { icon: WhatsappIcon, href: 'https://wa.me/917782905151',                     label: 'WhatsApp' },
 ];
 
 const emailjsConfig = {
-  serviceId: 'service_xd3knck',
+  serviceId:  'service_xd3knck',
   templateId: 'template_izhtc9e',
-  publicKey: 'Oh2ZJVifwgaL4g1H4',
+  publicKey:  'Oh2ZJVifwgaL4g1H4',
 };
 
 const Contact = () => {
   const resetTimerRef = useRef(null);
+  const leftRef  = useReveal({ threshold: 0.15 });
+  const rightRef = useReveal({ threshold: 0.15 });
+
   const [formData, setFormData] = useState({
-    name: '',
-    email: '',
-    subject: '',
-    message: '',
+    name: '', email: '', subject: '', message: '',
   });
-  const [status, setStatus] = useState('idle');
+  const [status,   setStatus]   = useState('idle');
   const [feedback, setFeedback] = useState('');
 
   useEffect(() => {
     return () => {
-      if (resetTimerRef.current) {
-        window.clearTimeout(resetTimerRef.current);
-      }
+      if (resetTimerRef.current) window.clearTimeout(resetTimerRef.current);
     };
   }, []);
 
-  const handleChange = (event) => {
-    setFormData((prev) => ({ ...prev, [event.target.name]: event.target.value }));
+  const handleChange = (e) => {
+    setFormData((prev) => ({ ...prev, [e.target.name]: e.target.value }));
   };
 
-  const handleSubmit = async (event) => {
-    event.preventDefault();
+  const handleSubmit = async (e) => {
+    e.preventDefault();
     if (resetTimerRef.current) {
       window.clearTimeout(resetTimerRef.current);
       resetTimerRef.current = null;
@@ -69,7 +62,6 @@ const Contact = () => {
     setFeedback('');
 
     const { serviceId, templateId, publicKey } = emailjsConfig;
-
     if (!serviceId || !templateId || !publicKey) {
       setStatus('error');
       setFeedback('Contact form is missing EmailJS configuration.');
@@ -81,13 +73,13 @@ const Contact = () => {
         serviceId,
         templateId,
         {
-          from_name: formData.name.trim(),
-          name: formData.name.trim(),
+          from_name:  formData.name.trim(),
+          name:       formData.name.trim(),
           from_email: formData.email.trim(),
-          email: formData.email.trim(),
-          reply_to: formData.email.trim(),
-          subject: formData.subject.trim() || 'Portfolio enquiry',
-          message: formData.message.trim(),
+          email:      formData.email.trim(),
+          reply_to:   formData.email.trim(),
+          subject:    formData.subject.trim() || 'Portfolio enquiry',
+          message:    formData.message.trim(),
         },
         { publicKey }
       );
@@ -99,9 +91,9 @@ const Contact = () => {
       resetTimerRef.current = window.setTimeout(() => {
         setStatus('idle');
         setFeedback('');
-      }, 3000);
-    } catch (error) {
-      console.error('EmailJS send failed:', error);
+      }, 4000);
+    } catch (err) {
+      console.error('EmailJS error:', err);
       setStatus('error');
       setFeedback('Unable to send your message right now. Please try again.');
     }
@@ -111,15 +103,18 @@ const Contact = () => {
     <section id="contact" className="section">
       <SectionHeading
         title="Get In Touch"
+        overline="08 — Contact"
         subtitle="Have a project in mind? Let's work together!"
       />
 
       <div className="contact-grid">
-        <div className="contact-copy">
-          <h3 className="font-heading gradient-text">
-            Let&apos;s Build Something Amazing
+        {/* ── Left: Info ── */}
+        <div ref={leftRef} className="reveal" style={{ transitionDelay: '0.05s' }}>
+          <h3 className="contact-heading">
+            Let&apos;s Build Something{' '}
+            <span>Amazing</span>
           </h3>
-          <p>
+          <p className="contact-subtext">
             Whether you need a sharp portfolio website, a powerful business
             platform, or an AI-integrated application, I&apos;m here to help
             bring your vision to life.
@@ -128,7 +123,7 @@ const Contact = () => {
           <div className="contact-detail-list">
             {contactDetails.map((item) => (
               <a key={item.label} href={item.href} className="contact-detail">
-                <span className="contact-detail-icon glass">
+                <span className="contact-detail-icon">
                   <item.icon size={18} aria-hidden="true" />
                 </span>
                 <span>{item.label}</span>
@@ -144,7 +139,7 @@ const Contact = () => {
                 target="_blank"
                 rel="noopener noreferrer"
                 aria-label={social.label}
-                className="contact-social-link glass"
+                className="contact-social-link"
               >
                 <social.icon aria-hidden="true" />
               </a>
@@ -152,12 +147,13 @@ const Contact = () => {
           </div>
         </div>
 
-        <div>
-          <div className="contact-form-panel glass-strong">
+        {/* ── Right: Form ── */}
+        <div ref={rightRef} className="reveal" style={{ transitionDelay: '0.12s' }}>
+          <div className="contact-form-panel glass-card">
             {status === 'success' && (
-              <div className="form-status form-status-success">
+              <div className="form-status form-status-success" role="alert">
                 <div className="form-status-icon">
-                  <Check size={28} aria-hidden="true" />
+                  <Check size={22} aria-hidden="true" />
                 </div>
                 <div>
                   <p>{feedback}</p>
@@ -167,9 +163,9 @@ const Contact = () => {
             )}
 
             {status === 'error' && (
-              <div className="form-status form-status-error">
+              <div className="form-status form-status-error" role="alert">
                 <div className="form-status-icon">
-                  <AlertCircle size={28} aria-hidden="true" />
+                  <AlertCircle size={22} aria-hidden="true" />
                 </div>
                 <div>
                   <p>{feedback}</p>
@@ -178,7 +174,7 @@ const Contact = () => {
               </div>
             )}
 
-            <form onSubmit={handleSubmit} className="contact-form">
+            <form onSubmit={handleSubmit} className="contact-form" noValidate>
               <input
                 type="text"
                 name="name"
@@ -210,7 +206,7 @@ const Contact = () => {
               />
               <textarea
                 name="message"
-                placeholder="Your Message"
+                placeholder="Tell me about your project…"
                 aria-label="Your Message"
                 className="form-input"
                 rows="5"
@@ -223,7 +219,9 @@ const Contact = () => {
                 className="btn-primary form-submit"
                 disabled={status === 'sending'}
               >
-                <span>{status === 'sending' ? 'Sending...' : 'Send Message'}</span>
+                <span>
+                  {status === 'sending' ? 'Sending…' : 'Send Message'}
+                </span>
                 <Send size={16} aria-hidden="true" />
               </button>
             </form>

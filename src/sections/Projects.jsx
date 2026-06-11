@@ -1,8 +1,9 @@
-import { ExternalLink, Code } from 'lucide-react';
+import { ExternalLink, ArrowUpRight } from 'lucide-react';
 import SectionHeading from '../components/SectionHeading';
-import sikkimpalImg from '../assets/projects/sikkimpal.webp';
-import trikastudioImg from '../assets/projects/trikastudio.webp';
-import kashikeshavImg from '../assets/projects/kashikeshav.webp';
+import { useRevealGroup } from '../hooks/useReveal';
+import sikkimpalImg    from '../assets/projects/sikkimpal.webp';
+import trikastudioImg  from '../assets/projects/trikastudio.webp';
+import kashikeshavImg  from '../assets/projects/kashikeshav.webp';
 import freepathshalaImg from '../assets/projects/freepathshala.webp';
 
 const projects = [
@@ -13,7 +14,7 @@ const projects = [
       'A modern tourism and travel platform for Sikkim that helps tourists explore destinations, hotels, travel information, and local experiences with an engaging and responsive interface.',
     image: sikkimpalImg,
     tags: ['React.js', 'Responsive Design', 'Travel Platform', 'Modern UI'],
-    liveDemo: 'https://sikkimpal.in/',
+    liveDemo: 'https://sh1eldtech.vercel.app/',
     github: null,
   },
   {
@@ -40,28 +41,30 @@ const projects = [
     title: 'FreePathshala',
     type: 'Educational Platform',
     description:
-      'FreePathshala is a web-based platform for managing donation pickups, recyclable scrap tracking, and revenue analytics with a real-time dashboard. It is built using React.js and Tailwind CSS for the frontend, while Node.js,Express.js, and Firebase (Firestore & Authentication) are used for the backend, database, and secure login system.',
+      'A web-based platform for managing donation pickups, recyclable scrap tracking, and revenue analytics with a real-time dashboard. Built with React.js, Node.js, Express.js, and Firebase.',
     image: freepathshalaImg,
-    tags: ['Education', 'React.js', 'Accessible Design', 'Modern UI'],
+    tags: ['Education', 'React.js', 'Firebase', 'Node.js'],
     liveDemo: null,
     github: null,
   },
 ];
 
 export default function Projects() {
+  const gridRef = useRevealGroup({ threshold: 0.05 });
+
   return (
     <section id="projects" className="section">
       <SectionHeading
         title="Featured Projects"
+        overline="04 — Work"
         subtitle="Real-world projects I've built for clients and businesses"
       />
 
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
+      <div ref={gridRef} className="projects-bento">
         {projects.map((project) => (
-          <article
-            key={project.title}
-            className="project-card glass-card group"
-          >
+          <article key={project.title} className="project-card glass-card reveal-item group">
+
+            {/* Image */}
             <div className="project-image">
               <img
                 src={project.image}
@@ -72,26 +75,33 @@ export default function Projects() {
                 decoding="async"
                 sizes="(min-width: 1024px) 540px, calc(100vw - 32px)"
               />
+              {/* Hover overlay — links to live demo */}
+              {project.liveDemo && (
+                <a
+                  href={project.liveDemo}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="project-image-overlay"
+                  aria-label={`View ${project.title} live`}
+                >
+                  <span>
+                    View Project <ArrowUpRight size={16} />
+                  </span>
+                </a>
+              )}
             </div>
 
+            {/* Content */}
             <div className="project-content">
-              <span className="project-type gradient-text">
-                {project.type}
-              </span>
+              <span className="project-type">{project.type}</span>
 
-              <h3 className="project-title font-heading">
-                {project.title}
-              </h3>
+              <h3 className="project-title font-heading">{project.title}</h3>
 
-              <p className="project-description">
-                {project.description}
-              </p>
+              <p className="project-description">{project.description}</p>
 
               <div className="project-tags">
                 {project.tags.map((tag) => (
-                  <span key={tag}>
-                    {tag}
-                  </span>
+                  <span key={tag}>{tag}</span>
                 ))}
               </div>
 
@@ -104,19 +114,8 @@ export default function Projects() {
                       rel="noopener noreferrer"
                       className="btn-primary btn-small"
                     >
-                      <ExternalLink size={16} aria-hidden="true" />
+                      <ExternalLink size={15} aria-hidden="true" />
                       Live Demo
-                    </a>
-                  )}
-                  {project.github && (
-                    <a
-                      href={project.github}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="btn-outline btn-small"
-                    >
-                      <Code size={16} aria-hidden="true" />
-                      GitHub
                     </a>
                   )}
                 </div>

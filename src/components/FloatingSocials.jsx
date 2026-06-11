@@ -18,7 +18,7 @@ const socials = [
     label: 'Instagram',
   },
   {
-    icon: <Mail aria-hidden="true" />,
+    icon: <Mail aria-hidden="true" size={17} />,
     href: 'mailto:abhi13062003@gmail.com',
     label: 'Email',
   },
@@ -26,14 +26,17 @@ const socials = [
 
 const FloatingSocials = () => {
   return (
-    <div className="floating-socials">
-      {socials.map((social) => (
+    <div className="floating-socials" aria-label="Social links">
+      {socials.map((social, i) => (
         <a
           key={social.label}
           href={social.href}
-          target="_blank"
-          rel="noopener noreferrer"
+          target={social.label !== 'Email' ? '_blank' : undefined}
+          rel={social.label !== 'Email' ? 'noopener noreferrer' : undefined}
           aria-label={social.label}
+          style={{
+            animation: `fadeUp 0.5s ${0.1 + i * 0.08}s cubic-bezier(0.22, 1, 0.36, 1) both`,
+          }}
         >
           {social.icon}
         </a>
