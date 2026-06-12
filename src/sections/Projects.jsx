@@ -71,7 +71,6 @@ export default function Projects() {
     <section id="projects" className="section">
       <SectionHeading
         title="Featured Projects"
-         
         subtitle="Real-world projects I've built for clients and businesses"
       />
 

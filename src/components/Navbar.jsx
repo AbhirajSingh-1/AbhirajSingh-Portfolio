@@ -1,6 +1,6 @@
 import { useCallback, useEffect, useState } from 'react';
 import { AnimatePresence, motion } from 'framer-motion';
-import { Moon, Sun, X } from 'lucide-react';
+import { X } from 'lucide-react';
 import { pressTap, softEase, spring } from '../utils/motion';
 
 const navItems = [
@@ -123,27 +123,6 @@ const Navbar = ({ theme, toggleTheme }) => {
           <ul className="nav-links-mobile-quick nav-links" aria-label="Quick navigation">
             {navItems.slice(0, 3).map(renderNavLink)}
           </ul>
-
-          <motion.button
-            onClick={toggleTheme}
-            className="nav-icon-button"
-            aria-label={theme === 'dark' ? 'Switch to light mode' : 'Switch to dark mode'}
-            whileHover={{ y: -1, scale: 1.05 }}
-            whileTap={pressTap}
-          >
-            <AnimatePresence mode="wait" initial={false}>
-              <motion.span
-                key={theme}
-                initial={{ opacity: 0, rotate: -90, scale: 0.7 }}
-                animate={{ opacity: 1, rotate: 0, scale: 1 }}
-                exit={{ opacity: 0, rotate: 90, scale: 0.7 }}
-                transition={{ duration: 0.2 }}
-                style={{ display: 'inline-flex' }}
-              >
-                {theme === 'dark' ? <Sun size={17} /> : <Moon size={17} />}
-              </motion.span>
-            </AnimatePresence>
-          </motion.button>
 
           <motion.a
             href="#contact"
