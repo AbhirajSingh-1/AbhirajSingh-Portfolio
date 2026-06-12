@@ -1,6 +1,7 @@
 import { Star } from 'lucide-react';
+import { motion } from 'framer-motion';
 import SectionHeading from '../components/SectionHeading';
-import { useRevealGroup } from '../hooks/useReveal';
+import { cardHover, cardReveal, fadeIn, staggerContainer, viewportOnce } from '../utils/motion';
 
 const testimonials = [
   {
@@ -30,41 +31,58 @@ const testimonials = [
 ];
 
 const Testimonials = () => {
-  const gridRef = useRevealGroup({ threshold: 0.08 });
-
   return (
     <section id="testimonials" className="section">
       <SectionHeading
         title="Client Testimonials"
-        overline="06 — Reviews"
         subtitle="What people say about working with me"
       />
 
-      <div ref={gridRef} className="testimonial-grid">
+      <motion.div
+        className="testimonial-grid"
+        variants={staggerContainer(0.09)}
+        initial="hidden"
+        whileInView="show"
+        viewport={viewportOnce}
+      >
         {testimonials.map((testimonial) => (
-          <article
+          <motion.article
             key={`${testimonial.name}-${testimonial.role}`}
-            className="testimonial-item glass-card reveal-item"
+            className="testimonial-item glass-card"
+            variants={cardReveal}
+            whileHover={cardHover}
           >
-            {/* Decorative quote mark */}
-            <span className="testimonial-quote-mark" aria-hidden="true">&ldquo;</span>
+            <motion.span
+              className="testimonial-quote-mark"
+              aria-hidden="true"
+              variants={fadeIn}
+            >
+              &ldquo;
+            </motion.span>
 
-            {/* Quote */}
             <p className="testimonial-text">
               {testimonial.text}
             </p>
 
-            {/* Stars */}
-            <div
+            <motion.div
               className="testimonial-rating"
               aria-label={`${testimonial.rating} out of 5 stars`}
+              variants={staggerContainer(0.04, 0.1)}
             >
               {Array.from({ length: testimonial.rating }).map((_, i) => (
-                <Star key={i} size={15} aria-hidden="true" />
+                <motion.span
+                  key={i}
+                  variants={{
+                    hidden: { opacity: 0, scale: 0.4, rotate: -18 },
+                    show: { opacity: 1, scale: 1, rotate: 0 },
+                  }}
+                  transition={{ type: 'spring', stiffness: 360, damping: 18 }}
+                >
+                  <Star size={15} aria-hidden="true" />
+                </motion.span>
               ))}
-            </div>
+            </motion.div>
 
-            {/* Author */}
             <div className="testimonial-author">
               <div className="testimonial-avatar" aria-hidden="true">
                 {testimonial.name.charAt(0)}
@@ -74,9 +92,9 @@ const Testimonials = () => {
                 <span className="testimonial-author-role">{testimonial.role}</span>
               </div>
             </div>
-          </article>
+          </motion.article>
         ))}
-      </div>
+      </motion.div>
     </section>
   );
 };

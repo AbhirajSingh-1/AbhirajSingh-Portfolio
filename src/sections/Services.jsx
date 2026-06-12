@@ -9,8 +9,9 @@ import {
   Layers,
   Gauge,
 } from 'lucide-react';
+import { motion } from 'framer-motion';
 import SectionHeading from '../components/SectionHeading';
-import { useRevealGroup } from '../hooks/useReveal';
+import { cardHover, cardReveal, spring, staggerContainer, viewportOnce } from '../utils/motion';
 
 const services = [
   {
@@ -38,7 +39,7 @@ const services = [
     icon: Briefcase,
   },
   {
-    title: 'NGO & Social Impact',
+    title: 'NGO and Social Impact',
     description:
       'Purpose-driven websites for NGOs and foundations with emotional design and donation integration capabilities.',
     icon: Heart,
@@ -70,39 +71,45 @@ const services = [
 ];
 
 const Services = () => {
-  const gridRef = useRevealGroup({ threshold: 0.05 });
-
   return (
     <section id="services" className="section">
       <SectionHeading
         title="My Services"
-        overline="05 — Services"
         subtitle="What I can build for you"
       />
 
-      <div ref={gridRef} className="service-grid">
-        {services.map((service, index) => {
+      <motion.div
+        className="service-grid"
+        variants={staggerContainer(0.075)}
+        initial="hidden"
+        whileInView="show"
+        viewport={viewportOnce}
+      >
+        {services.map((service) => {
           const Icon = service.icon;
-          const num  = String(index + 1).padStart(2, '0');
+
           return (
-            <div key={index} className="service-card glass-card reveal-item">
-              {/* Background number watermark */}
-              <span className="service-number" aria-hidden="true">{num}</span>
-
-              {/* Icon */}
-              <div className="service-icon">
+            <motion.div
+              key={service.title}
+              className="service-card glass-card"
+              variants={cardReveal}
+              whileHover={cardHover}
+            >
+              <motion.div
+                className="service-icon"
+                whileHover={{ rotate: -6, scale: 1.12 }}
+                transition={spring}
+              >
                 <Icon size={20} aria-hidden="true" />
-              </div>
+              </motion.div>
 
-              {/* Title */}
               <h3 className="service-title font-heading">{service.title}</h3>
 
-              {/* Description */}
               <p className="service-description">{service.description}</p>
-            </div>
+            </motion.div>
           );
         })}
-      </div>
+      </motion.div>
     </section>
   );
 };

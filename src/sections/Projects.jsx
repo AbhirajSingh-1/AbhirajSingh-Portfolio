@@ -1,9 +1,18 @@
 import { ExternalLink, ArrowUpRight } from 'lucide-react';
+import { motion } from 'framer-motion';
 import SectionHeading from '../components/SectionHeading';
-import { useRevealGroup } from '../hooks/useReveal';
-import sikkimpalImg    from '../assets/projects/sikkimpal.webp';
-import trikastudioImg  from '../assets/projects/trikastudio.webp';
-import kashikeshavImg  from '../assets/projects/kashikeshav.webp';
+import {
+  cardHover,
+  cardReveal,
+  pressTap,
+  softEase,
+  spring,
+  staggerContainer,
+  viewportOnce,
+} from '../utils/motion';
+import sikkimpalImg from '../assets/projects/sikkimpal.webp';
+import trikastudioImg from '../assets/projects/trikastudio.webp';
+import kashikeshavImg from '../assets/projects/kashikeshav.webp';
 import freepathshalaImg from '../assets/projects/freepathshala.webp';
 
 const projects = [
@@ -49,24 +58,39 @@ const projects = [
   },
 ];
 
-export default function Projects() {
-  const gridRef = useRevealGroup({ threshold: 0.05 });
+const projectCard = {
+  ...cardReveal,
+  hover: {
+    ...cardHover,
+    transition: spring,
+  },
+};
 
+export default function Projects() {
   return (
     <section id="projects" className="section">
       <SectionHeading
         title="Featured Projects"
-        overline="04 — Work"
+         
         subtitle="Real-world projects I've built for clients and businesses"
       />
 
-      <div ref={gridRef} className="projects-bento">
+      <motion.div
+        className="projects-bento"
+        variants={staggerContainer(0.1)}
+        initial="hidden"
+        whileInView="show"
+        viewport={viewportOnce}
+      >
         {projects.map((project) => (
-          <article key={project.title} className="project-card glass-card reveal-item group">
-
-            {/* Image */}
+          <motion.article
+            key={project.title}
+            className="project-card glass-card group"
+            variants={projectCard}
+            whileHover="hover"
+          >
             <div className="project-image">
-              <img
+              <motion.img
                 src={project.image}
                 alt={project.title}
                 width="900"
@@ -74,8 +98,13 @@ export default function Projects() {
                 loading="lazy"
                 decoding="async"
                 sizes="(min-width: 1024px) 540px, calc(100vw - 32px)"
+                variants={{
+                  hover: {
+                    scale: 1.07,
+                    transition: { duration: 0.55, ease: softEase },
+                  },
+                }}
               />
-              {/* Hover overlay — links to live demo */}
               {project.liveDemo && (
                 <a
                   href={project.liveDemo}
@@ -91,7 +120,6 @@ export default function Projects() {
               )}
             </div>
 
-            {/* Content */}
             <div className="project-content">
               <span className="project-type">{project.type}</span>
 
@@ -101,29 +129,37 @@ export default function Projects() {
 
               <div className="project-tags">
                 {project.tags.map((tag) => (
-                  <span key={tag}>{tag}</span>
+                  <motion.span
+                    key={tag}
+                    whileHover={{ y: -2, scale: 1.04 }}
+                    transition={spring}
+                  >
+                    {tag}
+                  </motion.span>
                 ))}
               </div>
 
               {(project.liveDemo || project.github) && (
                 <div className="project-links">
                   {project.liveDemo && (
-                    <a
+                    <motion.a
                       href={project.liveDemo}
                       target="_blank"
                       rel="noopener noreferrer"
                       className="btn-primary btn-small"
+                      whileHover={{ y: -2, scale: 1.02 }}
+                      whileTap={pressTap}
                     >
                       <ExternalLink size={15} aria-hidden="true" />
                       Live Demo
-                    </a>
+                    </motion.a>
                   )}
                 </div>
               )}
             </div>
-          </article>
+          </motion.article>
         ))}
-      </div>
+      </motion.div>
     </section>
   );
 }

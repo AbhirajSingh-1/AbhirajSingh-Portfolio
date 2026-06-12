@@ -1,6 +1,15 @@
 import { useEffect, useState } from 'react';
-import { ArrowRight, Mail, ChevronDown } from 'lucide-react';
+import {
+  motion,
+  useMotionValue,
+  useReducedMotion,
+  useSpring,
+  useTransform,
+} from 'framer-motion';
+import { ArrowRight, ChevronDown, Mail } from 'lucide-react';
+import { fadeUp, pressTap, softEase, staggerContainer } from '../utils/motion';
 import heroProfileImage from '../assets/projects/ME1.webp';
+import FlyingObjects from '../components/FlyingObjects';
 
 const roles = [
   'MERN Stack Developer',
@@ -15,10 +24,41 @@ const metrics = [
   { value: '13+', label: 'Technologies' },
 ];
 
+const heroMedia = {
+  hidden: {
+    opacity: 0,
+    x: 44,
+    scale: 0.92,
+    rotate: -2,
+  },
+  show: {
+    opacity: 1,
+    x: 0,
+    scale: 1,
+    rotate: 0,
+    transition: {
+      duration: 0.85,
+      ease: softEase,
+    },
+  },
+};
+
 export default function Hero() {
   const [displayText, setDisplayText] = useState('');
-  const [roleIndex, setRoleIndex]     = useState(0);
-  const [isDeleting, setIsDeleting]   = useState(false);
+  const [roleIndex, setRoleIndex] = useState(0);
+  const [isDeleting, setIsDeleting] = useState(false);
+  const shouldReduceMotion = useReducedMotion();
+
+  const pointerX = useMotionValue(0);
+  const pointerY = useMotionValue(0);
+  const rotateX = useSpring(useTransform(pointerY, [-0.5, 0.5], [7, -7]), {
+    stiffness: 180,
+    damping: 22,
+  });
+  const rotateY = useSpring(useTransform(pointerX, [-0.5, 0.5], [-8, 8]), {
+    stiffness: 180,
+    damping: 22,
+  });
 
   useEffect(() => {
     const currentRole = roles[roleIndex];
@@ -44,63 +84,105 @@ export default function Hero() {
     return () => window.clearTimeout(timeout);
   }, [displayText, isDeleting, roleIndex]);
 
+  const handleCardMove = (event) => {
+    if (shouldReduceMotion) return;
+
+    const rect = event.currentTarget.getBoundingClientRect();
+    pointerX.set((event.clientX - rect.left) / rect.width - 0.5);
+    pointerY.set((event.clientY - rect.top) / rect.height - 0.5);
+  };
+
+  const resetCardTilt = () => {
+    pointerX.set(0);
+    pointerY.set(0);
+  };
+
   return (
-    <section id="home" className="hero-section section-full">
-      <div className="section hero-grid">
+    <motion.section
+      id="home"
+      className="hero-section section-full"
+      initial="hidden"
+      animate="show"
+      variants={staggerContainer(0.08, 0.1)}
+    >
+      {/* Flying objects animation */}
+      {!shouldReduceMotion && <FlyingObjects />}
+      
+      <motion.div className="section hero-grid" variants={staggerContainer(0.1)}>
+        <motion.div className="hero-copy" variants={staggerContainer(0.08)}>
+           
 
-        {/* ── Left: Copy ── */}
-        <div className="hero-copy">
-
-
-          {/* Headline */}
-          <h1 className="hero-h1">
+          <motion.h1 className="hero-h1" variants={fadeUp}>
             Hi, I&apos;m{' '}
-            <span className="hero-name-gradient">
+            <motion.span
+              className="hero-name-gradient"
+              animate={{ backgroundPosition: ['0% 50%', '100% 50%', '0% 50%'] }}
+              transition={{ duration: 6, repeat: Infinity, ease: 'easeInOut' }}
+            >
               Abhiraj Singh
-            </span>
-          </h1>
+            </motion.span>
+          </motion.h1>
 
-          {/* Subtitle */}
-          <h2 className="hero-subtitle">
+          <motion.h2 className="hero-subtitle" variants={fadeUp}>
             Full Stack Developer &amp; Creative Web Designer
-          </h2>
+          </motion.h2>
 
-          {/* Typing role */}
-          <div className="hero-role" aria-live="polite">
+          <motion.div className="hero-role" variants={fadeUp} aria-live="polite">
             <span aria-label={`Currently: ${displayText}`}>{displayText}</span>
             <span className="typing-caret" aria-hidden="true" />
-          </div>
+          </motion.div>
 
-          {/* Description */}
-          <p className="hero-description">
+          <motion.p className="hero-description" variants={fadeUp}>
             I build fast, responsive, and visually polished web experiences
             for startups, businesses, agencies, and mission-driven teams.
-          </p>
+          </motion.p>
 
-          {/* CTA Buttons */}
-          <div className="hero-actions">
-            <a href="#projects" className="btn-primary">
+          <motion.div className="hero-actions" variants={fadeUp}>
+            <motion.a
+              href="#projects"
+              className="btn-primary"
+              whileHover={{ y: -3, scale: 1.02 }}
+              whileTap={pressTap}
+            >
               View Projects <ArrowRight size={17} aria-hidden="true" />
-            </a>
-            <a href="#contact" className="btn-outline">
+            </motion.a>
+            <motion.a
+              href="#contact"
+              className="btn-outline"
+              whileHover={{ y: -3, scale: 1.02 }}
+              whileTap={pressTap}
+            >
               Hire Me <Mail size={17} aria-hidden="true" />
-            </a>
-          </div>
+            </motion.a>
+          </motion.div>
 
-          {/* Metrics */}
-          <div className="hero-metrics">
-            {metrics.map((m, i) => (
-              <div key={m.label} className="hero-metric-item">
+          <motion.div className="hero-metrics" variants={staggerContainer(0.06)}>
+            {metrics.map((m) => (
+              <motion.div
+                key={m.label}
+                className="hero-metric-item"
+                variants={fadeUp}
+                whileHover={{ y: -4 }}
+              >
                 <span className="hero-metric-value">{m.value}</span>
                 <span className="hero-metric-label">{m.label}</span>
-              </div>
+              </motion.div>
             ))}
-          </div>
-        </div>
+          </motion.div>
+        </motion.div>
 
-        {/* ── Right: Profile Card ── */}
-        <div className="hero-media">
-          <div className="profile-card">
+        <motion.div className="hero-media" variants={heroMedia}>
+          <motion.div
+            className="profile-card"
+            onPointerMove={handleCardMove}
+            onPointerLeave={resetCardTilt}
+            style={{
+              rotateX: shouldReduceMotion ? 0 : rotateX,
+              rotateY: shouldReduceMotion ? 0 : rotateY,
+              transformPerspective: 1100,
+            }}
+            whileHover={shouldReduceMotion ? undefined : { y: -8, scale: 1.015 }}
+          >
             <img
               src={heroProfileImage}
               alt="Abhiraj Singh portrait"
@@ -111,16 +193,25 @@ export default function Hero() {
               fetchPriority="high"
               sizes="(max-width: 768px) 100vw, (max-width: 1024px) 45vw, 40vw"
             />
-          </div>
-        </div>
+           
+          </motion.div>
+        </motion.div>
+      </motion.div>
 
-      </div>
-
-      {/* Scroll cue */}
-      <a href="#about" className="scroll-cue" aria-label="Scroll to about section">
+      <motion.a
+        href="#about"
+        className="scroll-cue"
+        aria-label="Scroll to about section"
+        initial={{ opacity: 0, y: -4, x: '-50%' }}
+        animate={{ opacity: 1, y: [0, 8, 0], x: '-50%' }}
+        transition={{
+          opacity: { delay: 1.2, duration: 0.4 },
+          y: { delay: 1.2, duration: 2.2, repeat: Infinity, ease: 'easeInOut' },
+        }}
+      >
         <span>Scroll</span>
         <ChevronDown size={16} aria-hidden="true" />
-      </a>
-    </section>
+      </motion.a>
+    </motion.section>
   );
 }

@@ -1,17 +1,17 @@
-@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Playfair+Display:ital,wght@0,400;0,600;0,700;0,800;0,900;1,400;1,700&family=JetBrains+Mono:wght@400;500;600&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800;900&display=swap');
 @import "tailwindcss";
 
 /* ============================================================
    DESIGN SYSTEM — MIDNIGHT AMBER
-   Typography: Playfair Display (headings) + Inter (body) + JetBrains Mono (labels)
+   Typography: Poppins (all text)
    Accent:     Amber Gold #e8a44a  ·  Indigo Violet #7f5af0
    ============================================================ */
 
 
 @theme {
-  --font-sans: "Inter", system-ui, -apple-system, sans-serif;
-  --font-heading: "Playfair Display", "Inter", system-ui, sans-serif;
-  --font-mono: "JetBrains Mono", "Fira Code", monospace;
+  --font-sans: "Poppins", system-ui, -apple-system, sans-serif;
+  --font-heading: "Poppins", system-ui, sans-serif;
+  --font-mono: "Poppins", "Fira Code", monospace;
 
   --color-amber: #e8a44a;
   --color-violet: #7f5af0;
@@ -366,7 +366,6 @@ section {
   backdrop-filter: blur(16px);
   -webkit-backdrop-filter: blur(16px);
   transition: box-shadow 0.3s ease, border-color 0.3s ease;
-  animation: navDrop 0.4s cubic-bezier(0.22, 1, 0.36, 1) both;
 }
 
 .navbar.scrolled {
@@ -529,7 +528,6 @@ section {
   background: var(--bg-secondary);
   border-left: 1px solid var(--border);
   box-shadow: -20px 0 80px rgba(0, 0, 0, 0.36);
-  animation: slideInRight 0.32s cubic-bezier(0.22, 1, 0.36, 1) both;
   backdrop-filter: blur(20px);
 }
 
@@ -539,7 +537,6 @@ section {
   z-index: 940;
   background: rgba(8, 10, 18, 0.6);
   backdrop-filter: blur(4px);
-  animation: fadeIn 0.2s ease both;
 }
 
 .mobile-menu a {
@@ -553,9 +550,6 @@ section {
   font-size: 1.05rem;
   font-weight: 600;
   transition: background 0.2s ease, border-color 0.2s ease, color 0.2s ease;
-  opacity: 0;
-  transform: translateX(20px);
-  animation: slideInItem 0.35s cubic-bezier(0.22, 1, 0.36, 1) both;
 }
 
 .mobile-menu a:nth-child(1) { animation-delay: 0.06s; }
@@ -848,17 +842,6 @@ section {
   max-width: 46rem;
 }
 
-.hero-copy > * {
-  animation: fadeUp 0.6s cubic-bezier(0.22, 1, 0.36, 1) both;
-}
-
-.hero-copy > :nth-child(2) { animation-delay: 0.07s; }
-.hero-copy > :nth-child(3) { animation-delay: 0.14s; }
-.hero-copy > :nth-child(4) { animation-delay: 0.21s; }
-.hero-copy > :nth-child(5) { animation-delay: 0.28s; }
-.hero-copy > :nth-child(6) { animation-delay: 0.35s; }
-.hero-copy > :nth-child(7) { animation-delay: 0.42s; }
-
 /* Eyebrow pill */
 .eyebrow {
   display: inline-flex;
@@ -914,7 +897,6 @@ section {
   -webkit-background-clip: text;
   background-clip: text;
   -webkit-text-fill-color: transparent;
-  animation: gradientFlow 5s ease infinite;
 }
 
 .hero-subtitle {
@@ -1005,7 +987,7 @@ section {
 .hero-media {
   justify-self: end;
   width: min(100%, 28rem);
-  animation: fadeUp 0.7s 0.3s cubic-bezier(0.22, 1, 0.36, 1) both;
+  perspective: 1200px;
 }
 
 .profile-card {
@@ -1041,7 +1023,6 @@ section {
 }
 
 .profile-card:hover {
-  transform: translateY(-6px) rotate(1deg);
   box-shadow:
     0 36px 90px rgba(0, 0, 0, 0.45),
     0 0 0 2px rgba(232, 164, 74, 0.25),
@@ -1098,7 +1079,6 @@ section {
   letter-spacing: 0.1em;
   text-transform: uppercase;
   transform: translateX(-50%);
-  animation: floatY 2.5s ease-in-out infinite;
 }
 
 /* ============================================================
@@ -1231,6 +1211,9 @@ section {
 }
 
 .tab-button {
+  position: relative;
+  isolation: isolate;
+  overflow: hidden;
   min-height: 2.5rem;
   padding: 0.6rem 1rem;
   border: 1px solid var(--border);
@@ -1252,8 +1235,22 @@ section {
 
 .tab-button.active {
   border-color: var(--amber);
-  background: var(--gradient-amber);
+  background: transparent;
   color: #ffffff;
+}
+
+.tab-button-active-bg {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  border-radius: inherit;
+  background: var(--gradient-amber);
+  pointer-events: none;
+}
+
+.tab-button-label {
+  position: relative;
+  z-index: 1;
 }
 
 .skills-grid {
@@ -1547,6 +1544,10 @@ section {
   display: flex;
   gap: 0.2rem;
   margin-top: 1.25rem;
+}
+
+.testimonial-rating span {
+  display: inline-flex;
 }
 
 .testimonial-rating svg {

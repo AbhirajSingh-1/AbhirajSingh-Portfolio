@@ -1,7 +1,8 @@
 import { ExternalLink } from 'lucide-react';
+import { motion } from 'framer-motion';
 import { GithubIcon, LinkedinIcon, InstagramIcon } from '../components/SocialIcons';
 import SectionHeading from '../components/SectionHeading';
-import { useRevealGroup } from '../hooks/useReveal';
+import { cardHover, cardReveal, pressTap, spring, staggerContainer, viewportOnce } from '../utils/motion';
 
 const profiles = [
   {
@@ -34,44 +35,57 @@ const profiles = [
 ];
 
 const Profiles = () => {
-  const gridRef = useRevealGroup({ threshold: 0.1 });
-
   return (
     <section id="profiles" className="section">
       <SectionHeading
         title="Connect With Me"
-        overline="07 — Connect"
         subtitle="Find me on these platforms"
       />
 
-      <div ref={gridRef} className="profile-grid">
+      <motion.div
+        className="profile-grid"
+        variants={staggerContainer(0.08)}
+        initial="hidden"
+        whileInView="show"
+        viewport={viewportOnce}
+      >
         {profiles.map((profile) => {
           const Icon = profile.icon;
+
           return (
-            <div key={profile.name} className="profile-card-item glass-card reveal-item">
-              <Icon
-                className="profile-icon"
-                style={{ color: profile.color }}
-                aria-hidden="true"
-              />
+            <motion.div
+              key={profile.name}
+              className="profile-card-item glass-card"
+              variants={cardReveal}
+              whileHover={cardHover}
+            >
+              <motion.div whileHover={{ scale: 1.14, rotate: -4 }} transition={spring}>
+                <Icon
+                  className="profile-icon"
+                  style={{ color: profile.color }}
+                  aria-hidden="true"
+                />
+              </motion.div>
 
               <h3 className="profile-title font-heading">{profile.name}</h3>
               <p className="profile-username font-mono">{profile.username}</p>
               <p className="profile-description">{profile.description}</p>
 
-              <a
+              <motion.a
                 href={profile.url}
                 target="_blank"
                 rel="noopener noreferrer"
                 className="btn-outline btn-small"
+                whileHover={{ y: -2, scale: 1.02 }}
+                whileTap={pressTap}
               >
                 Visit Profile
                 <ExternalLink size={14} aria-hidden="true" />
-              </a>
-            </div>
+              </motion.a>
+            </motion.div>
           );
         })}
-      </div>
+      </motion.div>
     </section>
   );
 };

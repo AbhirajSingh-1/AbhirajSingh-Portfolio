@@ -1,5 +1,7 @@
+import { motion } from 'framer-motion';
 import { Mail } from 'lucide-react';
 import { GithubIcon, LinkedinIcon, InstagramIcon } from './SocialIcons';
+import { fadeUp, pressTap, staggerContainer } from '../utils/motion';
 
 const socials = [
   {
@@ -26,22 +28,28 @@ const socials = [
 
 const FloatingSocials = () => {
   return (
-    <div className="floating-socials" aria-label="Social links">
-      {socials.map((social, i) => (
-        <a
+    <motion.div
+      className="floating-socials"
+      aria-label="Social links"
+      variants={staggerContainer(0.08, 0.45)}
+      initial="hidden"
+      animate="show"
+    >
+      {socials.map((social) => (
+        <motion.a
           key={social.label}
           href={social.href}
           target={social.label !== 'Email' ? '_blank' : undefined}
           rel={social.label !== 'Email' ? 'noopener noreferrer' : undefined}
           aria-label={social.label}
-          style={{
-            animation: `fadeUp 0.5s ${0.1 + i * 0.08}s cubic-bezier(0.22, 1, 0.36, 1) both`,
-          }}
+          variants={fadeUp}
+          whileHover={{ y: -4, scale: 1.08 }}
+          whileTap={pressTap}
         >
           {social.icon}
-        </a>
+        </motion.a>
       ))}
-    </div>
+    </motion.div>
   );
 };
 

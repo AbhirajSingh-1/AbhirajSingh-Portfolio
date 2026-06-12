@@ -1,9 +1,19 @@
 import { useEffect, useRef, useState } from 'react';
 import emailjs from '@emailjs/browser';
+import { AnimatePresence, motion } from 'framer-motion';
 import { Check, Mail, Phone, Send, AlertCircle } from 'lucide-react';
 import { GithubIcon, LinkedinIcon, InstagramIcon, WhatsappIcon } from '../components/SocialIcons';
 import SectionHeading from '../components/SectionHeading';
-import { useReveal } from '../hooks/useReveal';
+import {
+  cardHover,
+  fadeUp,
+  pressTap,
+  slideLeft,
+  slideRight,
+  spring,
+  staggerContainer,
+  viewportOnce,
+} from '../utils/motion';
 
 const contactDetails = [
   {
@@ -19,27 +29,35 @@ const contactDetails = [
 ];
 
 const socialLinks = [
-  { icon: GithubIcon,   href: 'https://github.com/AbhirajSingh-1',             label: 'GitHub' },
-  { icon: LinkedinIcon, href: 'https://www.linkedin.com/in/abhirajsingh1306',   label: 'LinkedIn' },
-  { icon: InstagramIcon,href: 'https://www.instagram.com/abhiiiraj.singh/',      label: 'Instagram' },
-  { icon: WhatsappIcon, href: 'https://wa.me/917782905151',                     label: 'WhatsApp' },
+  { icon: GithubIcon, href: 'https://github.com/AbhirajSingh-1', label: 'GitHub' },
+  { icon: LinkedinIcon, href: 'https://www.linkedin.com/in/abhirajsingh1306', label: 'LinkedIn' },
+  { icon: InstagramIcon, href: 'https://www.instagram.com/abhiiiraj.singh/', label: 'Instagram' },
+  { icon: WhatsappIcon, href: 'https://wa.me/917782905151', label: 'WhatsApp' },
 ];
 
 const emailjsConfig = {
-  serviceId:  'service_xd3knck',
+  serviceId: 'service_xd3knck',
   templateId: 'template_izhtc9e',
-  publicKey:  'Oh2ZJVifwgaL4g1H4',
+  publicKey: 'Oh2ZJVifwgaL4g1H4',
+};
+
+const statusMotion = {
+  initial: { opacity: 0, y: -12, scale: 0.96 },
+  animate: { opacity: 1, y: 0, scale: 1 },
+  exit: { opacity: 0, y: -10, scale: 0.96 },
+  transition: { duration: 0.28 },
 };
 
 const Contact = () => {
   const resetTimerRef = useRef(null);
-  const leftRef  = useReveal({ threshold: 0.15 });
-  const rightRef = useReveal({ threshold: 0.15 });
 
   const [formData, setFormData] = useState({
-    name: '', email: '', subject: '', message: '',
+    name: '',
+    email: '',
+    subject: '',
+    message: '',
   });
-  const [status,   setStatus]   = useState('idle');
+  const [status, setStatus] = useState('idle');
   const [feedback, setFeedback] = useState('');
 
   useEffect(() => {
@@ -73,13 +91,13 @@ const Contact = () => {
         serviceId,
         templateId,
         {
-          from_name:  formData.name.trim(),
-          name:       formData.name.trim(),
+          from_name: formData.name.trim(),
+          name: formData.name.trim(),
           from_email: formData.email.trim(),
-          email:      formData.email.trim(),
-          reply_to:   formData.email.trim(),
-          subject:    formData.subject.trim() || 'Portfolio enquiry',
-          message:    formData.message.trim(),
+          email: formData.email.trim(),
+          reply_to: formData.email.trim(),
+          subject: formData.subject.trim() || 'Portfolio enquiry',
+          message: formData.message.trim(),
         },
         { publicKey }
       );
@@ -103,79 +121,107 @@ const Contact = () => {
     <section id="contact" className="section">
       <SectionHeading
         title="Get In Touch"
-        overline="08 — Contact"
         subtitle="Have a project in mind? Let's work together!"
       />
 
-      <div className="contact-grid">
-        {/* ── Left: Info ── */}
-        <div ref={leftRef} className="reveal" style={{ transitionDelay: '0.05s' }}>
-          <h3 className="contact-heading">
+      <motion.div
+        className="contact-grid"
+        variants={staggerContainer(0.12)}
+        initial="hidden"
+        whileInView="show"
+        viewport={viewportOnce}
+      >
+        <motion.div variants={slideLeft}>
+          <motion.h3 className="contact-heading" variants={fadeUp}>
             Let&apos;s Build Something{' '}
             <span>Amazing</span>
-          </h3>
-          <p className="contact-subtext">
+          </motion.h3>
+          <motion.p className="contact-subtext" variants={fadeUp}>
             Whether you need a sharp portfolio website, a powerful business
             platform, or an AI-integrated application, I&apos;m here to help
             bring your vision to life.
-          </p>
+          </motion.p>
 
-          <div className="contact-detail-list">
+          <motion.div className="contact-detail-list" variants={staggerContainer(0.07)}>
             {contactDetails.map((item) => (
-              <a key={item.label} href={item.href} className="contact-detail">
+              <motion.a
+                key={item.label}
+                href={item.href}
+                className="contact-detail"
+                variants={fadeUp}
+                whileHover={{ x: 4 }}
+              >
                 <span className="contact-detail-icon">
                   <item.icon size={18} aria-hidden="true" />
                 </span>
                 <span>{item.label}</span>
-              </a>
+              </motion.a>
             ))}
-          </div>
+          </motion.div>
 
-          <div className="contact-socials">
+          <motion.div className="contact-socials" variants={staggerContainer(0.05)}>
             {socialLinks.map((social) => (
-              <a
+              <motion.a
                 key={social.label}
                 href={social.href}
                 target="_blank"
                 rel="noopener noreferrer"
                 aria-label={social.label}
                 className="contact-social-link"
+                variants={fadeUp}
+                whileHover={{ y: -4, scale: 1.08 }}
+                whileTap={pressTap}
               >
                 <social.icon aria-hidden="true" />
-              </a>
+              </motion.a>
             ))}
-          </div>
-        </div>
+          </motion.div>
+        </motion.div>
 
-        {/* ── Right: Form ── */}
-        <div ref={rightRef} className="reveal" style={{ transitionDelay: '0.12s' }}>
-          <div className="contact-form-panel glass-card">
-            {status === 'success' && (
-              <div className="form-status form-status-success" role="alert">
-                <div className="form-status-icon">
-                  <Check size={22} aria-hidden="true" />
-                </div>
-                <div>
-                  <p>{feedback}</p>
-                  <span>I&apos;ll get back to you soon.</span>
-                </div>
-              </div>
-            )}
+        <motion.div variants={slideRight}>
+          <motion.div
+            className="contact-form-panel glass-card"
+            whileHover={cardHover}
+            transition={spring}
+          >
+            <AnimatePresence mode="wait">
+              {status === 'success' && (
+                <motion.div
+                  key="success"
+                  className="form-status form-status-success"
+                  role="alert"
+                  {...statusMotion}
+                >
+                  <div className="form-status-icon">
+                    <Check size={22} aria-hidden="true" />
+                  </div>
+                  <div>
+                    <p>{feedback}</p>
+                    <span>I&apos;ll get back to you soon.</span>
+                  </div>
+                </motion.div>
+              )}
 
-            {status === 'error' && (
-              <div className="form-status form-status-error" role="alert">
-                <div className="form-status-icon">
-                  <AlertCircle size={22} aria-hidden="true" />
-                </div>
-                <div>
-                  <p>{feedback}</p>
-                  <span>Check the form details and try again.</span>
-                </div>
-              </div>
-            )}
+              {status === 'error' && (
+                <motion.div
+                  key="error"
+                  className="form-status form-status-error"
+                  role="alert"
+                  {...statusMotion}
+                >
+                  <div className="form-status-icon">
+                    <AlertCircle size={22} aria-hidden="true" />
+                  </div>
+                  <div>
+                    <p>{feedback}</p>
+                    <span>Check the form details and try again.</span>
+                  </div>
+                </motion.div>
+              )}
+            </AnimatePresence>
 
             <form onSubmit={handleSubmit} className="contact-form" noValidate>
-              <input
+              <motion.input
                 type="text"
                 name="name"
                 placeholder="Your Name"
@@ -184,8 +230,9 @@ const Contact = () => {
                 required
                 value={formData.name}
                 onChange={handleChange}
+                whileFocus={{ scale: 1.01 }}
               />
-              <input
+              <motion.input
                 type="email"
                 name="email"
                 placeholder="Your Email"
@@ -194,8 +241,9 @@ const Contact = () => {
                 required
                 value={formData.email}
                 onChange={handleChange}
+                whileFocus={{ scale: 1.01 }}
               />
-              <input
+              <motion.input
                 type="text"
                 name="subject"
                 placeholder="Subject"
@@ -203,31 +251,35 @@ const Contact = () => {
                 className="form-input"
                 value={formData.subject}
                 onChange={handleChange}
+                whileFocus={{ scale: 1.01 }}
               />
-              <textarea
+              <motion.textarea
                 name="message"
-                placeholder="Tell me about your project…"
+                placeholder="Tell me about your project..."
                 aria-label="Your Message"
                 className="form-input"
                 rows="5"
                 required
                 value={formData.message}
                 onChange={handleChange}
+                whileFocus={{ scale: 1.01 }}
               />
-              <button
+              <motion.button
                 type="submit"
                 className="btn-primary form-submit"
                 disabled={status === 'sending'}
+                whileHover={status === 'sending' ? undefined : { y: -2, scale: 1.01 }}
+                whileTap={status === 'sending' ? undefined : pressTap}
               >
                 <span>
-                  {status === 'sending' ? 'Sending…' : 'Send Message'}
+                  {status === 'sending' ? 'Sending...' : 'Send Message'}
                 </span>
                 <Send size={16} aria-hidden="true" />
-              </button>
+              </motion.button>
             </form>
-          </div>
-        </div>
-      </div>
+          </motion.div>
+        </motion.div>
+      </motion.div>
     </section>
   );
 };

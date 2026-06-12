@@ -1,5 +1,7 @@
 import { useCallback, useEffect, useState } from 'react';
+import { AnimatePresence, motion } from 'framer-motion';
 import { Moon, Sun, X } from 'lucide-react';
+import { pressTap, softEase, spring } from '../utils/motion';
 
 const navItems = [
   { label: 'Home', href: '#home' },
@@ -10,12 +12,25 @@ const navItems = [
   { label: 'Contact', href: '#contact' },
 ];
 
-const Navbar = ({ theme, toggleTheme }) => {
-  const [scrolled, setScrolled]       = useState(false);
-  const [activeSection, setActiveSection] = useState('home');
-  const [mobileOpen, setMobileOpen]   = useState(false);
+const drawerLink = {
+  hidden: { opacity: 0, x: 24 },
+  show: (index) => ({
+    opacity: 1,
+    x: 0,
+    transition: {
+      delay: 0.08 + index * 0.045,
+      duration: 0.34,
+      ease: softEase,
+    },
+  }),
+  exit: { opacity: 0, x: 24, transition: { duration: 0.18 } },
+};
 
-  /* Scroll detection */
+const Navbar = ({ theme, toggleTheme }) => {
+  const [scrolled, setScrolled] = useState(false);
+  const [activeSection, setActiveSection] = useState('home');
+  const [mobileOpen, setMobileOpen] = useState(false);
+
   useEffect(() => {
     const handleScroll = () => setScrolled(window.scrollY > 24);
     handleScroll();
@@ -23,7 +38,6 @@ const Navbar = ({ theme, toggleTheme }) => {
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
 
-  /* Active section detection */
   useEffect(() => {
     const sectionIds = navItems.map((item) => item.href.replace('#', ''));
     const observer = new IntersectionObserver(
@@ -33,14 +47,15 @@ const Navbar = ({ theme, toggleTheme }) => {
       },
       { threshold: 0.35, rootMargin: '-90px 0px -45% 0px' }
     );
+
     sectionIds.forEach((id) => {
       const el = document.getElementById(id);
       if (el) observer.observe(el);
     });
+
     return () => observer.disconnect();
   }, []);
 
-  /* Lock body scroll when mobile menu is open */
   useEffect(() => {
     document.body.style.overflow = mobileOpen ? 'hidden' : '';
     return () => { document.body.style.overflow = ''; };
@@ -54,85 +69,99 @@ const Navbar = ({ theme, toggleTheme }) => {
     setMobileOpen(false);
   }, []);
 
+  const renderNavLink = (item) => {
+    const id = item.href.replace('#', '');
+
+    return (
+      <li key={item.href}>
+        <motion.a
+          href={item.href}
+          className={activeSection === id ? 'active' : ''}
+          onClick={(e) => handleNavClick(e, item.href)}
+          whileHover={{ y: -1 }}
+          whileTap={pressTap}
+        >
+          {item.label}
+        </motion.a>
+      </li>
+    );
+  };
+
   return (
     <>
-      {/* ── Main Navbar ── */}
-      <nav className={`navbar ${scrolled ? 'scrolled' : ''}`} aria-label="Primary navigation">
-
-        {/* Logo */}
-        <a
+      <motion.nav
+        className={`navbar ${scrolled ? 'scrolled' : ''}`}
+        aria-label="Primary navigation"
+        initial={{ opacity: 0, y: -24, x: '-50%' }}
+        animate={{ opacity: 1, y: 0, x: '-50%' }}
+        transition={{ duration: 0.55, ease: softEase }}
+      >
+        <motion.a
           href="#home"
           onClick={(e) => handleNavClick(e, '#home')}
           className="nav-logo"
           aria-label="Go to top"
+          whileHover={{ scale: 1.02 }}
+          whileTap={pressTap}
         >
-          <span className="nav-logo-mark" aria-hidden="true">AS</span>
+          <motion.span
+            className="nav-logo-mark"
+            aria-hidden="true"
+            whileHover={{ rotate: -6 }}
+            transition={spring}
+          >
+            AS
+          </motion.span>
           <span className="nav-logo-name">Abhiraj Singh</span>
-        </a>
+        </motion.a>
 
-        {/* Desktop links */}
         <ul className="nav-links-desktop nav-links" aria-label="Site sections">
-          {navItems.map((item) => {
-            const id = item.href.replace('#', '');
-            return (
-              <li key={item.href}>
-                <a
-                  href={item.href}
-                  className={activeSection === id ? 'active' : ''}
-                  onClick={(e) => handleNavClick(e, item.href)}
-                >
-                  {item.label}
-                </a>
-              </li>
-            );
-          })}
+          {navItems.map(renderNavLink)}
         </ul>
 
-        {/* Right actions */}
         <div className="nav-actions">
-          {/* Mobile quick links — 3 visible on small screens */}
           <ul className="nav-links-mobile-quick nav-links" aria-label="Quick navigation">
-            {navItems.slice(0, 3).map((item) => {
-              const id = item.href.replace('#', '');
-              return (
-                <li key={item.href}>
-                  <a
-                    href={item.href}
-                    className={activeSection === id ? 'active' : ''}
-                    onClick={(e) => handleNavClick(e, item.href)}
-                  >
-                    {item.label}
-                  </a>
-                </li>
-              );
-            })}
+            {navItems.slice(0, 3).map(renderNavLink)}
           </ul>
 
-          {/* Theme toggle */}
-          <button
+          <motion.button
             onClick={toggleTheme}
             className="nav-icon-button"
             aria-label={theme === 'dark' ? 'Switch to light mode' : 'Switch to dark mode'}
+            whileHover={{ y: -1, scale: 1.05 }}
+            whileTap={pressTap}
           >
-            {theme === 'dark' ? <Sun size={17} /> : <Moon size={17} />}
-          </button>
+            <AnimatePresence mode="wait" initial={false}>
+              <motion.span
+                key={theme}
+                initial={{ opacity: 0, rotate: -90, scale: 0.7 }}
+                animate={{ opacity: 1, rotate: 0, scale: 1 }}
+                exit={{ opacity: 0, rotate: 90, scale: 0.7 }}
+                transition={{ duration: 0.2 }}
+                style={{ display: 'inline-flex' }}
+              >
+                {theme === 'dark' ? <Sun size={17} /> : <Moon size={17} />}
+              </motion.span>
+            </AnimatePresence>
+          </motion.button>
 
-          {/* Hire Me CTA */}
-          <a
+          <motion.a
             href="#contact"
             onClick={(e) => handleNavClick(e, '#contact')}
             className="nav-cta"
+            whileHover={{ y: -2, scale: 1.02 }}
+            whileTap={pressTap}
           >
             Hire Me
-          </a>
+          </motion.a>
 
-          {/* Hamburger */}
-          <button
+          <motion.button
             className="nav-menu-button"
             onClick={() => setMobileOpen((open) => !open)}
             aria-label={mobileOpen ? 'Close menu' : 'Open menu'}
             aria-expanded={mobileOpen}
             aria-controls="mobile-navigation"
+            whileTap={pressTap}
           >
             <span
               className="nav-menu-line"
@@ -143,55 +172,80 @@ const Navbar = ({ theme, toggleTheme }) => {
               className="nav-menu-line"
               style={{ transform: mobileOpen ? 'rotate(-45deg) translateY(-5.5px)' : 'none' }}
             />
-          </button>
+          </motion.button>
         </div>
-      </nav>
+      </motion.nav>
 
-      {/* ── Mobile Drawer ── */}
-      {mobileOpen && (
-        <>
-          {/* Backdrop */}
-          <div
-            className="mobile-menu-backdrop"
-            onClick={() => setMobileOpen(false)}
-            aria-hidden="true"
-          />
-
-          {/* Drawer */}
-          <div id="mobile-navigation" className="mobile-menu" role="dialog" aria-modal="true">
-            {/* Close button */}
-            <button
-              className="mobile-menu-close"
+      <AnimatePresence>
+        {mobileOpen && (
+          <>
+            <motion.div
+              className="mobile-menu-backdrop"
               onClick={() => setMobileOpen(false)}
-              aria-label="Close menu"
-            >
-              <X size={18} />
-            </button>
+              aria-hidden="true"
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              transition={{ duration: 0.22 }}
+            />
 
-            {navItems.map((item) => {
-              const id = item.href.replace('#', '');
-              return (
-                <a
-                  key={item.href}
-                  href={item.href}
-                  className={activeSection === id ? 'active' : ''}
-                  onClick={(e) => handleNavClick(e, item.href)}
-                >
-                  {item.label}
-                </a>
-              );
-            })}
-
-            <a
-              href="#contact"
-              className="mobile-menu-cta"
-              onClick={(e) => handleNavClick(e, '#contact')}
+            <motion.div
+              id="mobile-navigation"
+              className="mobile-menu"
+              role="dialog"
+              aria-modal="true"
+              initial={{ x: '100%' }}
+              animate={{ x: 0 }}
+              exit={{ x: '100%' }}
+              transition={spring}
             >
-              Start a Project →
-            </a>
-          </div>
-        </>
-      )}
+              <motion.button
+                className="mobile-menu-close"
+                onClick={() => setMobileOpen(false)}
+                aria-label="Close menu"
+                whileTap={pressTap}
+              >
+                <X size={18} />
+              </motion.button>
+
+              {navItems.map((item, index) => {
+                const id = item.href.replace('#', '');
+
+                return (
+                  <motion.a
+                    key={item.href}
+                    href={item.href}
+                    className={activeSection === id ? 'active' : ''}
+                    onClick={(e) => handleNavClick(e, item.href)}
+                    custom={index}
+                    variants={drawerLink}
+                    initial="hidden"
+                    animate="show"
+                    exit="exit"
+                    whileTap={pressTap}
+                  >
+                    {item.label}
+                  </motion.a>
+                );
+              })}
+
+              <motion.a
+                href="#contact"
+                className="mobile-menu-cta"
+                onClick={(e) => handleNavClick(e, '#contact')}
+                custom={navItems.length}
+                variants={drawerLink}
+                initial="hidden"
+                animate="show"
+                exit="exit"
+                whileTap={pressTap}
+              >
+                Start a Project -&gt;
+              </motion.a>
+            </motion.div>
+          </>
+        )}
+      </AnimatePresence>
     </>
   );
 };

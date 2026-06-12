@@ -1,6 +1,6 @@
 import { useEffect, useState, lazy, Suspense } from 'react';
+import { MotionConfig } from 'framer-motion';
 import Navbar from './components/Navbar';
-import ScrollProgress from './components/ScrollProgress';
 import FloatingSocials from './components/FloatingSocials';
 
 import Hero from './sections/Hero';
@@ -20,9 +20,9 @@ const SectionLoader = () => <div style={{ minHeight: '100px' }} />;
 function App() {
   const [theme, setTheme] = useState(() => {
     if (typeof window !== 'undefined') {
-      return localStorage.getItem('portfolio-theme') || 'light';
+      return localStorage.getItem('portfolio-theme') || 'dark';
     }
-    return 'light';
+    return 'dark';
   });
 
   useEffect(() => {
@@ -35,8 +35,7 @@ function App() {
   };
 
   return (
-    <>
-      <ScrollProgress />
+    <MotionConfig reducedMotion="user">
       <FloatingSocials />
       <Navbar theme={theme} toggleTheme={toggleTheme} />
 
@@ -64,7 +63,7 @@ function App() {
       </main>
 
       <Footer />
-    </>
+    </MotionConfig>
   );
 }
 

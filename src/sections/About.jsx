@@ -1,11 +1,19 @@
 import { useEffect, useRef, useState } from 'react';
+import { animate, motion, useInView, useReducedMotion } from 'framer-motion';
 import SectionHeading from '../components/SectionHeading';
-import { useReveal, useRevealGroup } from '../hooks/useReveal';
+import {
+  cardHover,
+  cardReveal,
+  fadeUp,
+  slideLeft,
+  staggerContainer,
+  viewportOnce,
+} from '../utils/motion';
 import aboutImage from '../assets/projects/ME2.webp';
 
 const stats = [
   { target: 15, suffix: '+', label: 'Projects Completed' },
-  { target: 5,  suffix: '+', label: 'Client Projects' },
+  { target: 5, suffix: '+', label: 'Client Projects' },
   { target: 13, suffix: '+', label: 'Technologies Used' },
   { target: 10, suffix: '+', label: 'Responsive Websites' },
 ];
@@ -13,67 +21,52 @@ const stats = [
 function AnimatedCounter({ target, suffix }) {
   const [count, setCount] = useState(0);
   const ref = useRef(null);
-  const hasAnimated = useRef(false);
+  const isInView = useInView(ref, { once: true, amount: 0.55 });
+  const shouldReduceMotion = useReducedMotion();
 
   useEffect(() => {
-    const element = ref.current;
-    if (!element) return undefined;
+    if (!isInView) return undefined;
 
-    const observer = new IntersectionObserver(
-      ([entry]) => {
-        if (!entry.isIntersecting || hasAnimated.current) return;
-        hasAnimated.current = true;
+    if (shouldReduceMotion) return undefined;
 
-        if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
-          setCount(target);
-          return;
-        }
+    const controls = animate(0, target, {
+      duration: 1.35,
+      ease: [0.22, 1, 0.36, 1],
+      onUpdate: (value) => setCount(Math.round(value)),
+    });
 
-        const duration = 1300;
-        const startTime = performance.now();
-        let frameId;
-
-        const animate = (now) => {
-          const progress = Math.min((now - startTime) / duration, 1);
-          const eased = 1 - Math.pow(1 - progress, 3);
-          setCount(Math.floor(eased * target));
-          if (progress < 1) frameId = requestAnimationFrame(animate);
-        };
-
-        frameId = requestAnimationFrame(animate);
-        return () => cancelAnimationFrame(frameId);
-      },
-      { threshold: 0.4 }
-    );
-
-    observer.observe(element);
-    return () => observer.disconnect();
-  }, [target]);
+    return () => controls.stop();
+  }, [isInView, shouldReduceMotion, target]);
 
   return (
     <span ref={ref}>
-      {count}
+      {shouldReduceMotion && isInView ? target : count}
       {suffix}
     </span>
   );
 }
 
 export default function About() {
-  const imageRef  = useReveal({ threshold: 0.15 });
-  const copyRef   = useRevealGroup({ threshold: 0.1 });
-  const statsRef  = useRevealGroup({ threshold: 0.1 });
-
   return (
     <section id="about" className="section">
       <SectionHeading
         title="About Me"
-        overline="02 — About"
+         
         subtitle="Focused on fast, responsive, and polished web experiences"
       />
 
-      <div className="about-grid">
-        {/* Image panel */}
-        <div ref={imageRef} className="about-image-panel reveal">
+      <motion.div
+        className="about-grid"
+        variants={staggerContainer(0.12)}
+        initial="hidden"
+        whileInView="show"
+        viewport={viewportOnce}
+      >
+        <motion.div
+          className="about-image-panel"
+          variants={slideLeft}
+          whileHover={{ y: -8, rotate: -1.2, scale: 1.01 }}
+        >
           <img
             src={aboutImage}
             alt="Abhiraj Singh working on a web project"
@@ -84,41 +77,56 @@ export default function About() {
             className="about-image"
             sizes="(max-width: 768px) 100vw, (max-width: 1024px) 50vw, 45vw"
           />
-          <div className="about-image-overlay">
+          <motion.div
+            className="about-image-overlay"
+            initial={{ opacity: 0, y: 14 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={viewportOnce}
+            transition={{ delay: 0.25, duration: 0.5 }}
+          >
             <p className="about-image-kicker">About me</p>
             <strong>Clean builds, thoughtful interfaces, reliable delivery</strong>
-          </div>
-        </div>
+          </motion.div>
+        </motion.div>
 
-        {/* Copy */}
-        <div ref={copyRef} className="about-copy-wrapper">
-          <p className="reveal-item">
+        <motion.div className="about-copy-wrapper" variants={staggerContainer(0.08)}>
+          <motion.p variants={fadeUp}>
             I&apos;m a Full Stack Developer and Creative Web Designer who enjoys
             turning ideas into reliable, scalable, and visually clean digital products.
-          </p>
-          <p className="reveal-item">
+          </motion.p>
+          <motion.p variants={fadeUp}>
             My work centres on React.js, MERN Stack, REST APIs, AI integrations,
             and modern UI systems that feel smooth without becoming heavy.
-          </p>
-          <p className="reveal-item">
+          </motion.p>
+          <motion.p variants={fadeUp}>
             I build responsive websites for startups, businesses, NGOs, and
             agencies with a practical focus on speed, accessibility, and clear
             user journeys.
-          </p>
-        </div>
-      </div>
+          </motion.p>
+        </motion.div>
+      </motion.div>
 
-      {/* Stats */}
-      <div ref={statsRef} className="stats-grid">
+      <motion.div
+        className="stats-grid"
+        variants={staggerContainer(0.08)}
+        initial="hidden"
+        whileInView="show"
+        viewport={viewportOnce}
+      >
         {stats.map((stat) => (
-          <div key={stat.label} className="stat-card glass-card reveal-item">
+          <motion.div
+            key={stat.label}
+            className="stat-card glass-card"
+            variants={cardReveal}
+            whileHover={cardHover}
+          >
             <div className="stat-value">
               <AnimatedCounter target={stat.target} suffix={stat.suffix} />
             </div>
             <div className="stat-label">{stat.label}</div>
-          </div>
+          </motion.div>
         ))}
-      </div>
+      </motion.div>
     </section>
   );
 }
