@@ -1,4 +1,4 @@
-import { useEffect, useState, lazy, Suspense } from 'react';
+import { useEffect, lazy, Suspense } from 'react';
 import { MotionConfig } from 'framer-motion';
 import Navbar from './components/Navbar';
 import FloatingSocials from './components/FloatingSocials';
@@ -18,26 +18,14 @@ import Footer from './sections/Footer';
 const SectionLoader = () => <div style={{ minHeight: '100px' }} />;
 
 function App() {
-  const [theme, setTheme] = useState(() => {
-    if (typeof window !== 'undefined') {
-      return localStorage.getItem('portfolio-theme') || 'dark';
-    }
-    return 'dark';
-  });
-
   useEffect(() => {
-    document.documentElement.setAttribute('data-theme', theme);
-    localStorage.setItem('portfolio-theme', theme);
-  }, [theme]);
-
-  const toggleTheme = () => {
-    setTheme((prev) => (prev === 'dark' ? 'light' : 'dark'));
-  };
+    document.documentElement.setAttribute('data-theme', 'dark');
+  }, []);
 
   return (
     <MotionConfig reducedMotion="user">
       <FloatingSocials />
-      <Navbar theme={theme} toggleTheme={toggleTheme} />
+      <Navbar />
 
       <main>
         <Hero />

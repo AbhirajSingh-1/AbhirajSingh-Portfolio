@@ -26,7 +26,7 @@ const drawerLink = {
   exit: { opacity: 0, x: 24, transition: { duration: 0.18 } },
 };
 
-const Navbar = ({ theme, toggleTheme }) => {
+const Navbar = () => {
   const [scrolled, setScrolled] = useState(false);
   const [activeSection, setActiveSection] = useState('home');
   const [mobileOpen, setMobileOpen] = useState(false);
