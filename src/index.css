@@ -2,9 +2,9 @@
 @import "tailwindcss";
 
 /* ============================================================
-   DESIGN SYSTEM — MIDNIGHT AMBER
+   DESIGN SYSTEM — CRIMSON NOIR
    Typography: Poppins (all text)
-   Accent:     Amber Gold #e8a44a  ·  Indigo Violet #7f5af0
+   Accent:     Vivid Red #e02020  ·  Deep Crimson #8b0000
    ============================================================ */
 
 
@@ -13,9 +13,9 @@
   --font-heading: "Poppins", system-ui, sans-serif;
   --font-mono: "Poppins", "Fira Code", monospace;
 
-  --color-amber: #e8a44a;
-  --color-violet: #7f5af0;
-  --color-rose: #d4715e;
+  --color-amber: #e02020;
+  --color-violet: #8b0000;
+  --color-rose: #c41010;
   --color-success: #4ade80;
 }
 
@@ -24,43 +24,43 @@
    ============================================================ */
 :root {
   /* Backgrounds */
-  --bg-primary:   #080a12;
-  --bg-secondary: #0d1020;
-  --bg-tertiary:  #13172b;
-  --bg-card:      rgba(13, 17, 35, 0.74);
-  --bg-card-hover:rgba(18, 24, 48, 0.88);
+  --bg-primary:   #080808;
+  --bg-secondary: #0f0f0f;
+  --bg-tertiary:  #161616;
+  --bg-card:      rgba(15, 15, 15, 0.74);
+  --bg-card-hover:rgba(22, 22, 22, 0.88);
 
   /* Text */
-  --text-primary:   #f0ede8;
-  --text-secondary: #9b95a3;
-  --text-muted:     #5e5a68;
+  --text-primary:   #f5f0f0;
+  --text-secondary: #a09898;
+  --text-muted:     #5e5555;
 
   /* Accents */
-  --amber:      #e8a44a;
-  --amber-glow: rgba(232, 164, 74, 0.18);
-  --amber-subtle: rgba(232, 164, 74, 0.08);
-  --violet:     #7f5af0;
-  --violet-glow: rgba(127, 90, 240, 0.18);
+  --amber:      #e02020;
+  --amber-glow: rgba(224, 32, 32, 0.18);
+  --amber-subtle: rgba(224, 32, 32, 0.08);
+  --violet:     #8b0000;
+  --violet-glow: rgba(139, 0, 0, 0.18);
 
   /* Borders */
-  --border:       rgba(240, 237, 232, 0.09);
-  --border-hover: rgba(232, 164, 74, 0.38);
-  --border-focus: rgba(232, 164, 74, 0.55);
+  --border:       rgba(245, 240, 240, 0.09);
+  --border-hover: rgba(224, 32, 32, 0.38);
+  --border-focus: rgba(224, 32, 32, 0.55);
 
   /* Gradients */
-  --gradient-hero:   linear-gradient(125deg, #e8a44a 0%, #f0ede8 45%, #7f5af0 100%);
-  --gradient-amber:  linear-gradient(135deg, #e8a44a 0%, #d4715e 100%);
-  --gradient-violet: linear-gradient(135deg, #7f5af0 0%, #5b3fc0 100%);
-  --gradient-subtle: linear-gradient(135deg, rgba(232,164,74,0.1), rgba(127,90,240,0.08));
+  --gradient-hero:   linear-gradient(125deg, #e02020 0%, #f5f0f0 45%, #8b0000 100%);
+  --gradient-amber:  linear-gradient(135deg, #e02020 0%, #c41010 100%);
+  --gradient-violet: linear-gradient(135deg, #8b0000 0%, #5c0000 100%);
+  --gradient-subtle: linear-gradient(135deg, rgba(224,32,32,0.1), rgba(139,0,0,0.08));
 
   /* Shadows */
-  --shadow-card:  0 20px 60px rgba(0, 0, 0, 0.38);
-  --shadow-soft:  0 8px 32px rgba(0, 0, 0, 0.24);
-  --shadow-amber: 0 8px 32px rgba(232, 164, 74, 0.22);
-  --shadow-violet:0 8px 32px rgba(127, 90, 240, 0.22);
+  --shadow-card:  0 20px 60px rgba(0, 0, 0, 0.5);
+  --shadow-soft:  0 8px 32px rgba(0, 0, 0, 0.3);
+  --shadow-amber: 0 8px 32px rgba(224, 32, 32, 0.22);
+  --shadow-violet:0 8px 32px rgba(139, 0, 0, 0.22);
 
   /* Navbar */
-  --navbar-bg: rgba(8, 10, 18, 0.84);
+  --navbar-bg: rgba(8, 8, 8, 0.84);
 }
 
 /* ============================================================
@@ -133,7 +133,7 @@ section {
 }
 
 ::selection {
-  background: rgba(232, 164, 74, 0.28);
+  background: rgba(224, 32, 32, 0.28);
   color: #ffffff;
 }
 
@@ -146,7 +146,7 @@ section {
 }
 
 ::-webkit-scrollbar-thumb {
-  background: rgba(232, 164, 74, 0.3);
+  background: rgba(224, 32, 32, 0.3);
   border-radius: 999px;
 }
 
@@ -248,7 +248,7 @@ section {
   background: var(--gradient-amber);
   color: #ffffff;
   border: 1px solid transparent;
-  box-shadow: 0 4px 20px rgba(232, 164, 74, 0.3);
+  box-shadow: 0 4px 20px rgba(224, 32, 32, 0.3);
 }
 
 /* Shimmer sweep on btn-primary */
@@ -271,7 +271,7 @@ section {
   .btn-primary:hover,
   .nav-cta:hover {
     transform: translateY(-2px);
-    box-shadow: 0 8px 28px rgba(232, 164, 74, 0.4);
+    box-shadow: 0 8px 28px rgba(224, 32, 32, 0.4);
   }
 }
 
@@ -334,7 +334,7 @@ section {
 
 .navbar.scrolled {
   border-color: var(--border-hover);
-  box-shadow: 0 16px 48px rgba(0, 0, 0, 0.28), 0 0 0 1px rgba(232,164,74,0.1);
+  box-shadow: 0 16px 48px rgba(0, 0, 0, 0.4), 0 0 0 1px rgba(224,32,32,0.1);
 }
 
 /* Logo monogram */
@@ -412,7 +412,7 @@ section {
 
 .nav-links a:hover:not(.active) {
   color: var(--text-primary);
-  background: rgba(232, 164, 74, 0.06);
+  background: rgba(224, 32, 32, 0.06);
 }
 
 .nav-links a.active {
@@ -499,7 +499,7 @@ section {
   position: fixed;
   inset: 0;
   z-index: 940;
-  background: rgba(8, 10, 18, 0.6);
+  background: rgba(8, 8, 8, 0.6);
   backdrop-filter: blur(4px);
 }
 
@@ -789,8 +789,8 @@ section {
   inset: 0;
   pointer-events: none;
   background:
-    radial-gradient(ellipse 70% 55% at 75% 35%, rgba(127, 90, 240, 0.12), transparent),
-    radial-gradient(ellipse 55% 45% at 25% 70%, rgba(232, 164, 74, 0.07), transparent);
+    radial-gradient(ellipse 70% 55% at 75% 35%, rgba(139, 0, 0, 0.15), transparent),
+    radial-gradient(ellipse 55% 45% at 25% 70%, rgba(224, 32, 32, 0.08), transparent);
 }
 
 .hero-grid {
@@ -814,9 +814,9 @@ section {
   width: fit-content;
   margin-bottom: 1.25rem;
   padding: 0.4rem 0.85rem 0.4rem 0.6rem;
-  border: 1px solid rgba(232, 164, 74, 0.28);
+  border: 1px solid rgba(224, 32, 32, 0.28);
   border-radius: 999px;
-  background: rgba(232, 164, 74, 0.07);
+  background: rgba(224, 32, 32, 0.07);
   color: var(--text-secondary);
   font-family: var(--font-mono);
   font-size: 0.72rem;
@@ -959,12 +959,12 @@ section {
   overflow: hidden;
   width: 100%;
   aspect-ratio: 4 / 5;
-  border: 1px solid rgba(240, 237, 232, 0.14);
+  border: 1px solid rgba(245, 240, 240, 0.14);
   border-radius: 20px;
   background: var(--bg-tertiary);
   box-shadow:
-    0 28px 80px rgba(0, 0, 0, 0.4),
-    0 0 0 1px rgba(232, 164, 74, 0.08);
+    0 28px 80px rgba(0, 0, 0, 0.5),
+    0 0 0 1px rgba(224, 32, 32, 0.08);
   transition:
     transform 0.4s cubic-bezier(0.22, 1, 0.36, 1),
     box-shadow 0.4s ease;
@@ -973,7 +973,7 @@ section {
 .profile-card::after {
   position: absolute;
   inset: 0;
-  background: linear-gradient(180deg, transparent 50%, rgba(8, 10, 18, 0.78));
+  background: linear-gradient(180deg, transparent 50%, rgba(8, 8, 8, 0.78));
   content: "";
   pointer-events: none;
   border-radius: inherit;
@@ -988,9 +988,9 @@ section {
 
 .profile-card:hover {
   box-shadow:
-    0 36px 90px rgba(0, 0, 0, 0.45),
-    0 0 0 2px rgba(232, 164, 74, 0.25),
-    0 0 40px rgba(232, 164, 74, 0.12);
+    0 36px 90px rgba(0, 0, 0, 0.55),
+    0 0 0 2px rgba(224, 32, 32, 0.25),
+    0 0 40px rgba(224, 32, 32, 0.12);
 }
 
 .profile-card:hover img {
@@ -1009,7 +1009,7 @@ section {
   padding: 0.65rem 0.85rem;
   border: 1px solid rgba(255, 255, 255, 0.14);
   border-radius: 10px;
-  background: rgba(8, 10, 18, 0.76);
+  background: rgba(8, 8, 8, 0.76);
   color: #ffffff;
   font-size: 0.82rem;
   font-weight: 600;
@@ -1080,7 +1080,7 @@ section {
 .about-image-panel::after {
   position: absolute;
   inset: 0;
-  background: linear-gradient(180deg, transparent 50%, rgba(8, 10, 18, 0.8));
+  background: linear-gradient(180deg, transparent 50%, rgba(8, 8, 8, 0.8));
   content: "";
   pointer-events: none;
 }
@@ -1094,7 +1094,7 @@ section {
   padding: 0.85rem 1rem;
   border: 1px solid rgba(255, 255, 255, 0.12);
   border-radius: 12px;
-  background: rgba(8, 10, 18, 0.72);
+  background: rgba(8, 8, 8, 0.72);
   backdrop-filter: blur(10px);
   color: #ffffff;
 }
