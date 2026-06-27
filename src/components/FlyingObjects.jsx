@@ -6,6 +6,10 @@ import { useEffect, useRef } from 'react';
  * Objects (rocket, jet, satellite) orbit along elliptical rings centred
  * on the hero-copy block.  Each ring is a subtle stroked ellipse.
  * A tapered smoke trail is rendered as a fading polyline behind each craft.
+ *
+ * On mobile (≤980px) the hero stacks vertically: image is on top, text below.
+ * The canvas is clipped to start at the bottom of the profile card so the
+ * crafts never fly over the face image — they only appear in the text area.
  */
 export default function FlyingObjects({ className = '' }) {
   const canvasRef = useRef(null);
@@ -18,6 +22,33 @@ export default function FlyingObjects({ className = '' }) {
     let W = (canvas.width = canvas.offsetWidth);
     let H = (canvas.height = canvas.offsetHeight);
     let animId;
+    let clipTop = 0; // pixels from top that are hidden on mobile
+
+    // ── Mobile clip helper ───────────────────────────────────────────────────
+    // On mobile the hero stacks: profile image (top) → text copy (bottom).
+    // We clip the canvas so the crafts only fly in the text area.
+    function applyMobileClip() {
+      const isMobile = window.innerWidth <= 980;
+      if (isMobile) {
+        // Try to measure the actual profile-card height
+        const card = document.querySelector('.profile-card') ||
+                     document.querySelector('.hero-media');
+        if (card) {
+          const cardRect = card.getBoundingClientRect();
+          const sectionRect = canvas.getBoundingClientRect();
+          // How many px from the top of the section the card bottom sits
+          clipTop = Math.max(0, cardRect.bottom - sectionRect.top + 16);
+        } else {
+          // Fallback: hide top 42% of canvas
+          clipTop = H * 0.42;
+        }
+        // CSS clip so pixels above clipTop are invisible (no pointer events anyway)
+        canvas.style.clipPath = `inset(${clipTop}px 0 0 0)`;
+      } else {
+        clipTop = 0;
+        canvas.style.clipPath = '';
+      }
+    }
 
     // ── Palette ─────────────────────────────────────────────────────────────
     // Muted accents — visible on both light and dark hero backgrounds
@@ -130,16 +161,29 @@ export default function FlyingObjects({ className = '' }) {
       }
 
       _reset() {
-        // Centre the orbit on roughly the hero-copy block.
-        // Hero copy is the left ~52% of the hero section.
-        // We offset the ellipse centre slightly down from the top.
-        this.cx = W * 0.265;         // horizontal centre of hero copy
-        this.cy = H * 0.48;          // vertical centre
+        const isMobile = window.innerWidth <= 980;
 
-        // Each ring has different radii so they nest nicely
-        const scale = 0.88 + this.ring * 0.22;
-        this.rx = W * 0.20 * scale;  // horizontal semi-axis
-        this.ry = H * 0.30 * scale;  // vertical semi-axis
+        if (isMobile) {
+          // On mobile the text copy sits BELOW clipTop.
+          // Centre the orbits in that lower band.
+          const textAreaTop = clipTop;          // top of text region
+          const textAreaH   = H - clipTop;      // height of text region
+
+          this.cx = W * 0.50;                   // horizontally centred
+          this.cy = textAreaTop + textAreaH * 0.45; // vertically centred in text band
+
+          const scale = 0.7 + this.ring * 0.18;
+          this.rx = W * 0.38 * scale;           // wider relative ellipse
+          this.ry = textAreaH * 0.28 * scale;   // stays within text band
+        } else {
+          // Desktop — original behaviour
+          this.cx = W * 0.265;
+          this.cy = H * 0.48;
+
+          const scale = 0.88 + this.ring * 0.22;
+          this.rx = W * 0.20 * scale;
+          this.ry = H * 0.30 * scale;
+        }
 
         // Random start angle so they don't bunch up
         this.angle = (this.ring / 3) * Math.PI * 2 + Math.random() * 0.8;
@@ -242,9 +286,18 @@ export default function FlyingObjects({ className = '' }) {
     }
 
     // ── Bootstrap ─────────────────────────────────────────────────────────
-    const orbiters = [0, 1, 2].map((i) => new Orbiter(i));
+    // Use rAF so the profile-card is fully painted before we measure its
+    // position for the mobile clip. Orbiters are created after, so _reset()
+    // gets the correct clipTop value.
+    let orbiters;
+    let rafInit = requestAnimationFrame(() => {
+      applyMobileClip();
+      orbiters = [0, 1, 2].map((i) => new Orbiter(i));
+      loop();
+    });
 
     function loop() {
+      if (!orbiters) return; // guard: called before init rAF resolves
       ctx.clearRect(0, 0, W, H);
 
       // Draw rings first (background)
@@ -258,17 +311,18 @@ export default function FlyingObjects({ className = '' }) {
 
       animId = requestAnimationFrame(loop);
     }
-    loop();
 
     const onResize = () => {
       W = canvas.width = canvas.offsetWidth;
       H = canvas.height = canvas.offsetHeight;
-      // Re-centre orbits on resize
-      orbiters.forEach((o) => o._reset());
+      // Re-apply mobile clipping before re-centring orbits
+      applyMobileClip();
+      if (orbiters) orbiters.forEach((o) => o._reset());
     };
     window.addEventListener('resize', onResize);
 
     return () => {
+      cancelAnimationFrame(rafInit);
       cancelAnimationFrame(animId);
       window.removeEventListener('resize', onResize);
     };
