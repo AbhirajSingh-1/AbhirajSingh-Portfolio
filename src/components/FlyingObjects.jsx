@@ -56,6 +56,8 @@ export default function FlyingObjects({ className = '' }) {
       { body: '#7f77dd', smoke: ['#AFA9EC', '#C9C5F4', '#E4E2FA', 'transparent'] },
       { body: '#1D9E75', smoke: ['#5DCAA5', '#93DCC5', '#C0EEE1', 'transparent'] },
       { body: '#D85A30', smoke: ['#F0997B', '#F7BEA8', '#FAD9CC', 'transparent'] },
+      { body: '#E8C840', smoke: ['#F5DC70', '#F9EBA8', '#FDF5D8', 'transparent'] },
+      { body: '#C040D0', smoke: ['#DC80E8', '#EEAEF4', '#F7D5FA', 'transparent'] },
     ];
 
     // ── Craft drawing helpers ─────────────────────────────────────────────
@@ -146,7 +148,59 @@ export default function FlyingObjects({ className = '' }) {
       ctx.fill();
     }
 
-    const CRAFTS = [drawRocket, drawJet, drawSatellite];
+    function drawComet(ctx, size, color) {
+      const s = size;
+      // Comet head — bright glowing circle
+      ctx.beginPath();
+      ctx.arc(0, 0, s * 0.28, 0, Math.PI * 2);
+      ctx.fillStyle = color;
+      ctx.fill();
+      // Inner bright core
+      ctx.beginPath();
+      ctx.arc(0, -s * 0.04, s * 0.13, 0, Math.PI * 2);
+      ctx.fillStyle = 'rgba(255,255,255,0.7)';
+      ctx.fill();
+      // Tail spikes
+      const tailColors = [color, 'rgba(255,255,255,0.4)', 'transparent'];
+      for (let t = 0; t < 3; t++) {
+        ctx.beginPath();
+        ctx.moveTo(0, s * 0.22);
+        ctx.lineTo(-s * (0.12 - t * 0.04), s * (0.55 + t * 0.18));
+        ctx.lineTo(s * (0.12 - t * 0.04), s * (0.55 + t * 0.18));
+        ctx.closePath();
+        ctx.fillStyle = tailColors[t];
+        ctx.globalAlpha = 0.6 - t * 0.18;
+        ctx.fill();
+      }
+      ctx.globalAlpha = 1;
+    }
+
+    function drawUFO(ctx, size, color) {
+      const s = size;
+      // Bottom dome (hull)
+      ctx.beginPath();
+      ctx.ellipse(0, s * 0.1, s * 0.52, s * 0.22, 0, 0, Math.PI * 2);
+      ctx.fillStyle = color;
+      ctx.fill();
+      // Top cockpit bubble
+      ctx.beginPath();
+      ctx.ellipse(0, -s * 0.06, s * 0.26, s * 0.22, 0, Math.PI, Math.PI * 2);
+      ctx.fillStyle = 'rgba(180,240,255,0.55)';
+      ctx.fill();
+      ctx.strokeStyle = color;
+      ctx.lineWidth = 1;
+      ctx.stroke();
+      // Rim lights
+      const lights = [-s*0.36, -s*0.18, 0, s*0.18, s*0.36];
+      lights.forEach((lx) => {
+        ctx.beginPath();
+        ctx.arc(lx, s * 0.12, s * 0.05, 0, Math.PI * 2);
+        ctx.fillStyle = 'rgba(255,255,180,0.9)';
+        ctx.fill();
+      });
+    }
+
+    const CRAFTS = [drawRocket, drawJet, drawSatellite, drawComet, drawUFO];
 
     // ── Smoke segment ─────────────────────────────────────────────────────
     // We store the last N positions of each object and draw a fading
@@ -292,7 +346,7 @@ export default function FlyingObjects({ className = '' }) {
     let orbiters;
     let rafInit = requestAnimationFrame(() => {
       applyMobileClip();
-      orbiters = [0, 1, 2].map((i) => new Orbiter(i));
+      orbiters = [0, 1, 2, 3, 4].map((i) => new Orbiter(i));
       loop();
     });
 
@@ -300,10 +354,7 @@ export default function FlyingObjects({ className = '' }) {
       if (!orbiters) return; // guard: called before init rAF resolves
       ctx.clearRect(0, 0, W, H);
 
-      // Draw rings first (background)
-      orbiters.forEach((o) => o.drawRing());
-
-      // Then draw crafts + trails
+      // Draw crafts + trails only (rings removed — they overlapped the profile image)
       orbiters.forEach((o) => {
         o.update();
         o.draw();

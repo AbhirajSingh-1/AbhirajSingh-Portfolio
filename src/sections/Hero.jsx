@@ -6,9 +6,10 @@ import {
   useSpring,
   useTransform,
 } from 'framer-motion';
-import { ArrowRight, ChevronDown, Mail } from 'lucide-react';
+import { ArrowRight, ChevronDown, Download, Mail } from 'lucide-react';
 import { fadeUp, pressTap, softEase, staggerContainer } from '../utils/motion';
-import heroProfileImage from '../assets/projects/ME1.webp';
+import heroProfileImage from '../assets/projects/ME4.webp';
+import resumePDF from '../assets/projects/Abhiraj_Singh_resume.pdf';
 import FlyingObjects from '../components/FlyingObjects';
 
 const roles = [
@@ -110,7 +111,7 @@ export default function Hero() {
       
       <motion.div className="section hero-grid" variants={staggerContainer(0.1)}>
         <motion.div className="hero-copy" variants={staggerContainer(0.08)}>
-           
+
 
           <motion.h1 className="hero-h1" variants={fadeUp}>
             Hi, I&apos;m{' '}
@@ -154,6 +155,16 @@ export default function Hero() {
             >
               Hire Me <Mail size={17} aria-hidden="true" />
             </motion.a>
+            <motion.a
+              href={resumePDF}
+              download="Abhiraj_Singh_Resume.pdf"
+              className="btn-resume"
+              whileHover={{ y: -3, scale: 1.02 }}
+              whileTap={pressTap}
+              aria-label="Download Abhiraj Singh's Resume"
+            >
+              <Download size={17} aria-hidden="true" /> Resume
+            </motion.a>
           </motion.div>
 
           <motion.div className="hero-metrics" variants={staggerContainer(0.06)}>
@@ -173,7 +184,7 @@ export default function Hero() {
 
         <motion.div className="hero-media" variants={heroMedia}>
           <motion.div
-            className="profile-card"
+            className="hero-circle-frame"
             onPointerMove={handleCardMove}
             onPointerLeave={resetCardTilt}
             style={{
@@ -183,17 +194,22 @@ export default function Hero() {
             }}
             whileHover={shouldReduceMotion ? undefined : { y: -8, scale: 1.015 }}
           >
-            <img
-              src={heroProfileImage}
-              alt="Abhiraj Singh portrait"
-              width="960"
-              height="1200"
-              loading="eager"
-              decoding="async"
-              fetchPriority="high"
-              sizes="(max-width: 768px) 100vw, (max-width: 1024px) 45vw, 40vw"
-            />
-           
+            {/* Outer glow ring */}
+            <div className="hero-circle-glow" aria-hidden="true" />
+            {/* Dark circle — image lives INSIDE so transparent pixels show dark bg */}
+            <div className="hero-circle-bg">
+              <img
+                src={heroProfileImage}
+                alt="Abhiraj Singh portrait"
+                className="hero-circle-photo"
+                width="960"
+                height="1200"
+                loading="eager"
+                decoding="async"
+                fetchPriority="high"
+                sizes="(max-width: 768px) 100vw, (max-width: 1024px) 45vw, 40vw"
+              />
+            </div>
           </motion.div>
         </motion.div>
       </motion.div>

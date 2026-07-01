@@ -2,9 +2,9 @@
 @import "tailwindcss";
 
 /* ============================================================
-   DESIGN SYSTEM — CRIMSON NOIR
+   DESIGN SYSTEM — ORANGE NOIR
    Typography: Poppins (all text)
-   Accent:     Vivid Red #e02020  ·  Deep Crimson #8b0000
+   Accent:     Vivid Orange #FF6B00  ·  Deep Orange #CC4A00
    ============================================================ */
 
 
@@ -13,9 +13,9 @@
   --font-heading: "Poppins", system-ui, sans-serif;
   --font-mono: "Poppins", "Fira Code", monospace;
 
-  --color-amber: #e02020;
-  --color-violet: #8b0000;
-  --color-rose: #c41010;
+  --color-amber: #FF6600;
+  --color-violet: #CC5200;
+  --color-rose: #E85500;
   --color-success: #4ade80;
 }
 
@@ -23,44 +23,44 @@
    CSS CUSTOM PROPERTIES — DARK MODE (DEFAULT)
    ============================================================ */
 :root {
-  /* Backgrounds */
+  /* Backgrounds — deep black like the reference */
   --bg-primary:   #080808;
-  --bg-secondary: #0f0f0f;
-  --bg-tertiary:  #161616;
-  --bg-card:      rgba(15, 15, 15, 0.74);
-  --bg-card-hover:rgba(22, 22, 22, 0.88);
+  --bg-secondary: #0e0e0e;
+  --bg-tertiary:  #181818;
+  --bg-card:      rgba(16, 16, 16, 0.82);
+  --bg-card-hover:rgba(24, 24, 24, 0.94);
 
   /* Text */
   --text-primary:   #f5f0f0;
   --text-secondary: #a09898;
   --text-muted:     #5e5555;
 
-  /* Accents */
-  --amber:      #e02020;
-  --amber-glow: rgba(224, 32, 32, 0.18);
-  --amber-subtle: rgba(224, 32, 32, 0.08);
-  --violet:     #8b0000;
-  --violet-glow: rgba(139, 0, 0, 0.18);
+  /* Accents — bright orange like the reference */
+  --amber:        #FF6600;
+  --amber-glow:   rgba(255, 102, 0, 0.22);
+  --amber-subtle: rgba(255, 102, 0, 0.10);
+  --violet:       #CC5200;
+  --violet-glow:  rgba(204, 82, 0, 0.18);
 
   /* Borders */
-  --border:       rgba(245, 240, 240, 0.09);
-  --border-hover: rgba(224, 32, 32, 0.38);
-  --border-focus: rgba(224, 32, 32, 0.55);
+  --border:       rgba(245, 240, 240, 0.08);
+  --border-hover: rgba(255, 102, 0, 0.42);
+  --border-focus: rgba(255, 102, 0, 0.60);
 
   /* Gradients */
-  --gradient-hero:   linear-gradient(125deg, #e02020 0%, #f5f0f0 45%, #8b0000 100%);
-  --gradient-amber:  linear-gradient(135deg, #e02020 0%, #c41010 100%);
-  --gradient-violet: linear-gradient(135deg, #8b0000 0%, #5c0000 100%);
-  --gradient-subtle: linear-gradient(135deg, rgba(224,32,32,0.1), rgba(139,0,0,0.08));
+  --gradient-hero:   linear-gradient(125deg, #FF6600 0%, #f5f0f0 45%, #CC5200 100%);
+  --gradient-amber:  linear-gradient(135deg, #FF6600 0%, #CC5200 100%);
+  --gradient-violet: linear-gradient(135deg, #CC5200 0%, #8B3000 100%);
+  --gradient-subtle: linear-gradient(135deg, rgba(255,102,0,0.10), rgba(204,82,0,0.07));
 
   /* Shadows */
-  --shadow-card:  0 20px 60px rgba(0, 0, 0, 0.5);
-  --shadow-soft:  0 8px 32px rgba(0, 0, 0, 0.3);
-  --shadow-amber: 0 8px 32px rgba(224, 32, 32, 0.22);
-  --shadow-violet:0 8px 32px rgba(139, 0, 0, 0.22);
+  --shadow-card:  0 20px 60px rgba(0, 0, 0, 0.60);
+  --shadow-soft:  0 8px 32px rgba(0, 0, 0, 0.35);
+  --shadow-amber: 0 8px 32px rgba(255, 102, 0, 0.30);
+  --shadow-violet:0 8px 32px rgba(204, 82, 0, 0.22);
 
   /* Navbar */
-  --navbar-bg: rgba(8, 8, 8, 0.84);
+  --navbar-bg: rgba(8, 8, 8, 0.90);
 }
 
 /* ============================================================
@@ -133,7 +133,7 @@ section {
 }
 
 ::selection {
-  background: rgba(224, 32, 32, 0.28);
+  background: rgba(255, 107, 0, 0.30);
   color: #ffffff;
 }
 
@@ -146,7 +146,7 @@ section {
 }
 
 ::-webkit-scrollbar-thumb {
-  background: rgba(224, 32, 32, 0.3);
+  background: rgba(255, 107, 0, 0.35);
   border-radius: 999px;
 }
 
@@ -248,7 +248,7 @@ section {
   background: var(--gradient-amber);
   color: #ffffff;
   border: 1px solid transparent;
-  box-shadow: 0 4px 20px rgba(224, 32, 32, 0.3);
+  box-shadow: 0 4px 20px rgba(255, 107, 0, 0.35);
 }
 
 /* Shimmer sweep on btn-primary */
@@ -271,7 +271,7 @@ section {
   .btn-primary:hover,
   .nav-cta:hover {
     transform: translateY(-2px);
-    box-shadow: 0 8px 28px rgba(224, 32, 32, 0.4);
+    box-shadow: 0 8px 28px rgba(255, 107, 0, 0.45);
   }
 }
 
@@ -292,6 +292,41 @@ section {
 .btn-small {
   padding: 0.6rem 1rem;
   font-size: 0.85rem;
+}
+
+/* Download Resume button — green accent, dashed border */
+.btn-resume {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.45rem;
+  padding: 0.8rem 1.4rem;
+  font-family: var(--font-sans);
+  font-weight: 600;
+  font-size: 0.92rem;
+  line-height: 1;
+  white-space: nowrap;
+  border-radius: 10px;
+  border: 1.5px dashed rgba(74, 222, 128, 0.55);
+  background: rgba(74, 222, 128, 0.07);
+  color: #4ade80;
+  text-decoration: none;
+  position: relative;
+  overflow: hidden;
+  transition:
+    transform 0.25s cubic-bezier(0.22, 1, 0.36, 1),
+    box-shadow 0.25s ease,
+    background 0.25s ease,
+    border-color 0.25s ease;
+}
+
+@media (hover: hover) {
+  .btn-resume:hover {
+    background: rgba(74, 222, 128, 0.14);
+    border-color: rgba(74, 222, 128, 0.85);
+    box-shadow: 0 0 18px rgba(74, 222, 128, 0.22);
+    transform: translateY(-2px);
+  }
 }
 
 /* ============================================================
@@ -334,7 +369,7 @@ section {
 
 .navbar.scrolled {
   border-color: var(--border-hover);
-  box-shadow: 0 16px 48px rgba(0, 0, 0, 0.4), 0 0 0 1px rgba(224,32,32,0.1);
+  box-shadow: 0 16px 48px rgba(0, 0, 0, 0.4), 0 0 0 1px rgba(255,107,0,0.12);
 }
 
 /* Logo monogram */
@@ -412,7 +447,7 @@ section {
 
 .nav-links a:hover:not(.active) {
   color: var(--text-primary);
-  background: rgba(224, 32, 32, 0.06);
+  background: rgba(255, 107, 0, 0.07);
 }
 
 .nav-links a.active {
@@ -789,8 +824,24 @@ section {
   inset: 0;
   pointer-events: none;
   background:
-    radial-gradient(ellipse 70% 55% at 75% 35%, rgba(139, 0, 0, 0.15), transparent),
-    radial-gradient(ellipse 55% 45% at 25% 70%, rgba(224, 32, 32, 0.08), transparent);
+    radial-gradient(ellipse 70% 55% at 75% 35%, rgba(204, 74, 0, 0.14), transparent),
+    radial-gradient(ellipse 55% 45% at 25% 70%, rgba(255, 107, 0, 0.07), transparent);
+}
+
+/* Decorative triangles (top-right corner) — like the reference image */
+.hero-section::after {
+  content: "";
+  position: absolute;
+  top: 0;
+  right: 0;
+  width: clamp(180px, 22vw, 300px);
+  height: clamp(180px, 22vw, 300px);
+  pointer-events: none;
+  background:
+    linear-gradient(135deg, rgba(255,107,0,0.10) 0%, transparent 55%),
+    linear-gradient(225deg, rgba(255,107,0,0.07) 0%, transparent 50%);
+  clip-path: polygon(100% 0, 100% 100%, 0 0);
+  z-index: 0;
 }
 
 .hero-grid {
@@ -845,6 +896,7 @@ section {
 }
 
 /* Hero headline */
+
 .hero-h1 {
   font-family: var(--font-heading);
   font-size: clamp(2.8rem, 6vw, 5rem);
@@ -947,54 +999,92 @@ section {
   letter-spacing: 0.03em;
 }
 
-/* Profile card */
+/* ============================================================
+   HERO CIRCULAR FRAME — ME4 transparent-bg photo centered in circle
+   ============================================================ */
 .hero-media {
   justify-self: end;
-  width: min(100%, 28rem);
+  width: min(100%, 32rem);
   perspective: 1200px;
-}
-
-.profile-card {
   position: relative;
-  overflow: hidden;
-  width: 100%;
-  aspect-ratio: 4 / 5;
-  border: 1px solid rgba(245, 240, 240, 0.14);
-  border-radius: 20px;
-  background: var(--bg-tertiary);
-  box-shadow:
-    0 28px 80px rgba(0, 0, 0, 0.5),
-    0 0 0 1px rgba(224, 32, 32, 0.08);
-  transition:
-    transform 0.4s cubic-bezier(0.22, 1, 0.36, 1),
-    box-shadow 0.4s ease;
+  /* Must be above canvas z-index (5) so crafts/trails don't render over image */
+  z-index: 10;
 }
 
-.profile-card::after {
+/* The outer wrapper — square so the circle is perfect */
+.hero-circle-frame {
+  position: relative;
+  width: 100%;
+  aspect-ratio: 1 / 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: visible;
+  transition: transform 0.4s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+/* Outermost pulsing ring — subtle orange glow */
+.hero-circle-glow {
+  position: absolute;
+  inset: -6px;
+  border-radius: 50%;
+  background: transparent;
+  border: 2px solid rgba(255, 102, 0, 0.20);
+  animation: circleGlowPulse 3s ease-in-out infinite;
+  pointer-events: none;
+  z-index: 0;
+}
+
+/* Dark filled circle — image is INSIDE here, clips to circle via overflow:hidden */
+.hero-circle-bg {
   position: absolute;
   inset: 0;
-  background: linear-gradient(180deg, transparent 50%, rgba(8, 8, 8, 0.78));
-  content: "";
-  pointer-events: none;
-  border-radius: inherit;
+  border-radius: 50%;
+  /* Dark radial bg — transparent pixels of ME4 will show this */
+  background: radial-gradient(circle at 50% 55%, #2a1a0e 0%, #1a1008 50%, #0d0905 100%);
+  box-shadow:
+    inset 0 0 40px rgba(0, 0, 0, 0.4),
+    0 0 0 3px rgba(255, 102, 0, 0.25),
+    0 40px 100px rgba(0, 0, 0, 0.5);
+  /* CRITICAL: clip everything inside to the circle shape */
+  overflow: hidden;
+  z-index: 1;
+  display: flex;
+  align-items: flex-end;
+  justify-content: center;
 }
 
-.profile-card img {
+/* Person photo — fills the circle; parent overflow:hidden handles clipping */
+.hero-circle-photo {
+  display: block;
   width: 100%;
   height: 100%;
   object-fit: cover;
+  object-position: center top;
+  /* No border-radius here — parent already clips to circle via overflow:hidden */
+  mix-blend-mode: normal;
+  filter: brightness(0.82) saturate(0.88) contrast(1.06);
   transition: transform 0.5s cubic-bezier(0.22, 1, 0.36, 1);
+  flex-shrink: 0;
 }
 
-.profile-card:hover {
-  box-shadow:
-    0 36px 90px rgba(0, 0, 0, 0.55),
-    0 0 0 2px rgba(224, 32, 32, 0.25),
-    0 0 40px rgba(224, 32, 32, 0.12);
-}
-
-.profile-card:hover img {
+.hero-circle-frame:hover .hero-circle-photo {
   transform: scale(1.04);
+}
+
+
+
+
+
+@keyframes circleGlowPulse {
+  0%, 100% {
+    border-color: rgba(255, 102, 0, 0.15);
+    box-shadow: 0 0 0 0 rgba(255,102,0,0.10);
+  }
+  50% {
+    border-color: rgba(255, 102, 0, 0.40);
+    box-shadow: 0 0 0 16px rgba(255,102,0,0.04), 0 0 80px rgba(255,102,0,0.10);
+  }
 }
 
 .profile-card-badge {
@@ -2018,8 +2108,25 @@ textarea.form-input {
 
   .hero-media {
     justify-self: center;
-    width: min(100%, 26rem);
+    width: min(100%, 22rem);
     order: -1;
+    /* Mobile: animate in from right with bounce */
+    animation: mobileHeroSlideIn 0.85s cubic-bezier(0.34, 1.56, 0.64, 1) both;
+  }
+
+  @keyframes mobileHeroSlideIn {
+    from { opacity: 0; transform: translateX(40px) scale(0.92); }
+    to   { opacity: 1; transform: translateX(0)  scale(1); }
+}
+
+  /* Pulse the orange circle glow more strongly on mobile */
+  .hero-circle-glow {
+    animation: circleGlowPulseMobile 2.2s ease-in-out infinite;
+  }
+
+  @keyframes circleGlowPulseMobile {
+    0%, 100% { border-color: rgba(255,107,0,0.22); box-shadow: 0 0 0 0 rgba(255,107,0,0.14); }
+    50%       { border-color: rgba(255,107,0,0.55); box-shadow: 0 0 0 16px rgba(255,107,0,0.06); }
   }
 
   .about-image-panel {
@@ -2078,6 +2185,58 @@ textarea.form-input {
     padding-top: 7.5rem;
     padding-bottom: 5rem;
     text-align: center;
+    gap: 1.5rem;
+  }
+
+  /* Mobile hero copy: staggered slide-up entries */
+  .hero-h1 {
+    animation: mobileSlideUp 0.7s 0.1s cubic-bezier(0.22,1,0.36,1) both;
+  }
+  .hero-subtitle {
+    animation: mobileSlideUp 0.7s 0.2s cubic-bezier(0.22,1,0.36,1) both;
+  }
+  .hero-role {
+    animation: mobileSlideUp 0.7s 0.28s cubic-bezier(0.22,1,0.36,1) both;
+  }
+  .hero-description {
+    animation: mobileSlideUp 0.7s 0.35s cubic-bezier(0.22,1,0.36,1) both;
+  }
+  .hero-actions {
+    animation: mobileSlideUp 0.7s 0.42s cubic-bezier(0.22,1,0.36,1) both;
+  }
+  .hero-metrics {
+    animation: mobileSlideUp 0.7s 0.50s cubic-bezier(0.22,1,0.36,1) both;
+  }
+
+  @keyframes mobileSlideUp {
+    from { opacity: 0; transform: translateY(24px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+
+  /* Metric cards mobile pulse on appear */
+  .hero-metric-item {
+    animation: mobileMetricPop 0.6s cubic-bezier(0.34, 1.56, 0.64, 1) both;
+  }
+  .hero-metric-item:nth-child(1) { animation-delay: 0.55s; }
+  .hero-metric-item:nth-child(2) { animation-delay: 0.65s; }
+  .hero-metric-item:nth-child(3) { animation-delay: 0.75s; }
+
+  @keyframes mobileMetricPop {
+    from { opacity: 0; transform: scale(0.8) translateY(10px); }
+    to   { opacity: 1; transform: scale(1) translateY(0); }
+  }
+
+  /* Hero circle frame mobile — smaller and perfectly centered */
+  .hero-circle-frame {
+    aspect-ratio: 1 / 1;
+  }
+
+  .hero-circle-photo {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: center top;
+    border-radius: 50%;
   }
 
   .hero-h1 {
