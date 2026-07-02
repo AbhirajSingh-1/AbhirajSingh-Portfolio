@@ -9,7 +9,7 @@ import {
   staggerContainer,
   viewportOnce,
 } from '../utils/motion';
-import aboutImage from '../assets/projects/ME2.webp';
+import aboutImage from '../assets/projects/ME1.webp';
 
 const stats = [
   { target: 15, suffix: '+', label: 'Projects Completed' },
