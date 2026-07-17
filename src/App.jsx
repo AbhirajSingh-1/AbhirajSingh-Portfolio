@@ -1,37 +1,33 @@
 import { lazy, Suspense } from 'react';
 import { MotionConfig } from 'framer-motion';
 import Navbar from './components/Navbar';
-import FloatingSocials from './components/FloatingSocials';
-
 import Hero from './sections/Hero';
 
+import About from './sections/About';
+
 // All below-fold sections lazy-loaded for best FCP/LCP
-const About       = lazy(() => import('./sections/About'));
-const Skills      = lazy(() => import('./sections/Skills'));
-const Projects    = lazy(() => import('./sections/Projects'));
-const Services    = lazy(() => import('./sections/Services'));
-const Testimonials= lazy(() => import('./sections/Testimonials'));
-const Profiles    = lazy(() => import('./sections/Profiles'));
-const Contact     = lazy(() => import('./sections/Contact'));
-const Footer      = lazy(() => import('./sections/Footer'));
+const Projects     = lazy(() => import('./sections/Projects'));
+const Services     = lazy(() => import('./sections/Services'));
+const Testimonials = lazy(() => import('./sections/Testimonials'));
+const Profiles     = lazy(() => import('./sections/Profiles'));
+const Contact      = lazy(() => import('./sections/Contact'));
+const Footer       = lazy(() => import('./sections/Footer'));
 
 // Minimal height placeholder while lazy section loads
-const SectionLoader = () => <div style={{ minHeight: '60px' }} />;
+const SectionLoader = () => <div style={{ minHeight: '80px' }} />;
 
 function App() {
   return (
     <MotionConfig reducedMotion="user">
-      <FloatingSocials />
       <Navbar />
 
       <main>
-        {/* Hero is eager — it IS the LCP element */}
+        {/* Hero & About are eager — they are visible immediately above the fold */}
         <Hero />
+        <About />
 
-        {/* Single Suspense boundary for all below-fold content */}
+        {/* Single Suspense boundary for below-fold content */}
         <Suspense fallback={<SectionLoader />}>
-          <About />
-          <Skills />
           <Projects />
           <Services />
           <Testimonials />

@@ -1,17 +1,9 @@
 import {
-  Code,
-  Layout,
-  User,
-  Briefcase,
-  Heart,
-  Smartphone,
-  Zap,
-  Layers,
-  Gauge,
+  Code, Layout, User, Briefcase, Heart, Smartphone, Zap, Layers, Gauge,
 } from 'lucide-react';
 import { motion } from 'framer-motion';
 import SectionHeading from '../components/SectionHeading';
-import { cardHover, cardReveal, spring, staggerContainer, viewportOnce } from '../utils/motion';
+import { cardReveal, spring, staggerContainer, viewportOnce } from '../utils/motion';
 
 const services = [
   {
@@ -70,48 +62,54 @@ const services = [
   },
 ];
 
-const Services = () => {
+export default function Services() {
   return (
-    <section id="services" className="section">
-      <SectionHeading
-        title="My Services"
-        subtitle="What I can build for you"
-      />
+    <section id="services" className="py-12 lg:py-16 bg-transparent border-b border-indigo-100/20">
+      <div className="max-w-7xl mx-auto px-5 sm:px-8">
+        <SectionHeading
+          overline="What I Do"
+          title="My Services"
+          subtitle="What I can build for you"
+        />
 
-      <motion.div
-        className="service-grid"
-        variants={staggerContainer(0.075)}
-        initial="hidden"
-        whileInView="show"
-        viewport={viewportOnce}
-      >
-        {services.map((service) => {
-          const Icon = service.icon;
-
-          return (
-            <motion.div
-              key={service.title}
-              className="service-card glass-card"
-              variants={cardReveal}
-              whileHover={cardHover}
-            >
+        <motion.div
+          className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5"
+          variants={staggerContainer(0.075)}
+          initial="hidden"
+          whileInView="show"
+          viewport={viewportOnce}
+        >
+          {services.map((service, i) => {
+            const Icon = service.icon;
+            return (
               <motion.div
-                className="service-icon"
-                whileHover={{ rotate: -6, scale: 1.12 }}
+                key={service.title}
+                variants={cardReveal}
+                whileHover={{ y: -6, scale: 1.01 }}
                 transition={spring}
+                className="group bg-white border border-gray-100 rounded-2xl p-7 shadow-sm hover:shadow-lg hover:border-indigo-200 hover:shadow-indigo-50/50 transition-all duration-300"
               >
-                <Icon size={20} aria-hidden="true" />
+                {/* Icon circle */}
+                <motion.div
+                  className="w-12 h-12 flex items-center justify-center bg-indigo-50 border border-indigo-100 text-indigo-600 rounded-xl mb-5 group-hover:bg-indigo-600 group-hover:border-indigo-600 group-hover:text-white transition-all duration-300 shadow-sm"
+                  whileHover={{ rotate: -8, scale: 1.08 }}
+                  transition={spring}
+                >
+                  <Icon size={20} aria-hidden="true" className="group-hover:text-white transition-colors" />
+                </motion.div>
+
+                <h3 className="text-base font-bold text-gray-900 mb-2 leading-tight">
+                  {service.title}
+                </h3>
+
+                <p className="text-gray-500 text-sm leading-relaxed">
+                  {service.description}
+                </p>
               </motion.div>
-
-              <h3 className="service-title font-heading">{service.title}</h3>
-
-              <p className="service-description">{service.description}</p>
-            </motion.div>
-          );
-        })}
-      </motion.div>
+            );
+          })}
+        </motion.div>
+      </div>
     </section>
   );
-};
-
-export default Services;
+}

@@ -1,16 +1,8 @@
 import { useEffect, useState } from 'react';
-import {
-  motion,
-  useMotionValue,
-  useReducedMotion,
-  useSpring,
-  useTransform,
-} from 'framer-motion';
-import { ArrowRight, ChevronDown, Download, Mail } from 'lucide-react';
-import { fadeUp, pressTap, softEase, staggerContainer } from '../utils/motion';
-import heroProfileImage from '../assets/projects/ME4.webp';
+import { motion } from 'framer-motion';
+import { ChevronRight, Download, Mail } from 'lucide-react';
+import heroImg from '../assets/projects/ME4.webp';
 import resumePDF from '../assets/projects/Abhiraj_Singh_resume.pdf';
-import FlyingObjects from '../components/FlyingObjects';
 
 const roles = [
   'MERN Stack Developer',
@@ -19,215 +11,145 @@ const roles = [
   'Creative UI Designer',
 ];
 
-const metrics = [
-  { value: '15+', label: 'Projects' },
-  { value: '5+', label: 'Client Builds' },
-  { value: '13+', label: 'Technologies' },
-];
+function useTypewriter(words) {
+  const [text, setText]         = useState('');
+  const [wordIdx, setWordIdx]   = useState(0);
+  const [deleting, setDeleting] = useState(false);
 
-const heroMedia = {
-  hidden: {
-    opacity: 0,
-    x: 44,
-    scale: 0.92,
-    rotate: -2,
-  },
-  show: {
-    opacity: 1,
-    x: 0,
-    scale: 1,
-    rotate: 0,
-    transition: {
-      duration: 0.85,
-      ease: softEase,
-    },
-  },
+  useEffect(() => {
+    const current = words[wordIdx];
+    const delay   = deleting ? 30 : 65;
+    const t = setTimeout(() => {
+      if (!deleting && text.length < current.length) {
+        setText(current.slice(0, text.length + 1));
+      } else if (!deleting && text.length === current.length) {
+        setTimeout(() => setDeleting(true), 1200);
+      } else if (deleting && text.length > 0) {
+        setText(current.slice(0, text.length - 1));
+      } else {
+        setDeleting(false);
+        setWordIdx((i) => (i + 1) % words.length);
+      }
+    }, delay);
+    return () => clearTimeout(t);
+  }, [text, deleting, wordIdx, words]);
+
+  return text;
+}
+
+const staggerIn = {
+  hidden: {},
+  show: { transition: { staggerChildren: 0.08, delayChildren: 0.05 } },
+};
+
+const itemIn = {
+  hidden: { opacity: 0, y: 22 },
+  show: { opacity: 1, y: 0, transition: { duration: 0.55, ease: [0.22, 1, 0.36, 1] } },
 };
 
 export default function Hero() {
-  const [displayText, setDisplayText] = useState('');
-  const [roleIndex, setRoleIndex] = useState(0);
-  const [isDeleting, setIsDeleting] = useState(false);
-  const shouldReduceMotion = useReducedMotion();
-
-  const pointerX = useMotionValue(0);
-  const pointerY = useMotionValue(0);
-  const rotateX = useSpring(useTransform(pointerY, [-0.5, 0.5], [7, -7]), {
-    stiffness: 180,
-    damping: 22,
-  });
-  const rotateY = useSpring(useTransform(pointerX, [-0.5, 0.5], [-8, 8]), {
-    stiffness: 180,
-    damping: 22,
-  });
-
-  useEffect(() => {
-    const currentRole = roles[roleIndex];
-    const delay = isDeleting ? 30 : 60;
-
-    const timeout = window.setTimeout(() => {
-      if (!isDeleting && displayText.length < currentRole.length) {
-        setDisplayText(currentRole.slice(0, displayText.length + 1));
-        return;
-      }
-      if (!isDeleting) {
-        window.setTimeout(() => setIsDeleting(true), 1000);
-        return;
-      }
-      if (displayText.length > 0) {
-        setDisplayText(currentRole.slice(0, displayText.length - 1));
-        return;
-      }
-      setIsDeleting(false);
-      setRoleIndex((prev) => (prev + 1) % roles.length);
-    }, delay);
-
-    return () => window.clearTimeout(timeout);
-  }, [displayText, isDeleting, roleIndex]);
-
-  const handleCardMove = (event) => {
-    if (shouldReduceMotion) return;
-
-    const rect = event.currentTarget.getBoundingClientRect();
-    pointerX.set((event.clientX - rect.left) / rect.width - 0.5);
-    pointerY.set((event.clientY - rect.top) / rect.height - 0.5);
-  };
-
-  const resetCardTilt = () => {
-    pointerX.set(0);
-    pointerY.set(0);
-  };
+  const displayText = useTypewriter(roles);
 
   return (
-    <motion.section
-      id="home"
-      className="hero-section section-full"
-      initial="hidden"
-      animate="show"
-      variants={staggerContainer(0.08, 0.1)}
-    >
-      {/* Flying objects animation */}
-      {!shouldReduceMotion && <FlyingObjects />}
-      
-      <motion.div className="section hero-grid" variants={staggerContainer(0.1)}>
-        <motion.div className="hero-copy" variants={staggerContainer(0.08)}>
+    <section id="home" className="relative min-h-[90vh] flex items-center bg-transparent pt-24 pb-6 overflow-hidden">
+      {/* Premium floating background gradients */}
+      <div className="absolute top-1/4 left-5 w-80 h-80 bg-amber-200/5 rounded-full blur-3xl pointer-events-none" />
+      <div className="absolute bottom-1/4 right-5 w-96 h-96 bg-amber-300/5 rounded-full blur-3xl pointer-events-none" />
+      <div className="absolute top-10 right-1/3 w-80 h-80 bg-orange-100/5 rounded-full blur-3xl pointer-events-none" />
 
-
-          <motion.h1 className="hero-h1" variants={fadeUp}>
-            Hi, I&apos;m{' '}
-            <motion.span
-              className="hero-name-gradient"
-              animate={{ backgroundPosition: ['0% 50%', '100% 50%', '0% 50%'] }}
-              transition={{ duration: 6, repeat: Infinity, ease: 'easeInOut' }}
-            >
+      <div className="relative z-10 max-w-7xl mx-auto w-full px-5 sm:px-8 flex flex-col lg:flex-row items-center justify-between gap-12 lg:gap-16">
+        
+        {/* Left Copy Column */}
+        <motion.div
+          className="flex-1 space-y-6 max-w-xl"
+          variants={staggerIn}
+          initial="hidden"
+          animate="show"
+        >
+          <motion.h1
+            variants={itemIn}
+            className="text-5xl sm:text-6xl lg:text-[4.2rem] font-black text-gray-900 leading-[1.05] tracking-tight"
+          >
+            Hi, I'm<br />
+            <span className="text-indigo-600">
               Abhiraj Singh
-            </motion.span>
+            </span>
           </motion.h1>
 
-          <motion.h2 className="hero-subtitle" variants={fadeUp}>
-            Full Stack Developer &amp; Creative Web Designer
-          </motion.h2>
-
-          <motion.div className="hero-role" variants={fadeUp} aria-live="polite">
-            <span aria-label={`Currently: ${displayText}`}>{displayText}</span>
-            <span className="typing-caret" aria-hidden="true" />
+          <motion.div
+            variants={itemIn}
+            aria-live="polite"
+            className="text-xl lg:text-2xl font-bold text-gray-900 h-9 flex items-center gap-0.5"
+          >
+            <span className="text-gray-900">{displayText}</span>
+            <span className="typing-caret text-black" aria-hidden="true" />
           </motion.div>
 
-          <motion.p className="hero-description" variants={fadeUp}>
-            I build fast, responsive, and visually polished web experiences
-            for startups, businesses, agencies, and mission-driven teams.
+          <motion.p variants={itemIn} className="text-gray-900 text-lg font-medium leading-relaxed">
+            I build fast, responsive, and visually polished web experiences for startups,
+            businesses, agencies, and mission-driven teams.
           </motion.p>
 
-          <motion.div className="hero-actions" variants={fadeUp}>
-            <motion.a
+          <motion.div variants={itemIn} className="flex flex-wrap gap-3 pt-1">
+            <a
               href="#projects"
-              className="btn-primary"
-              whileHover={{ y: -3, scale: 1.02 }}
-              whileTap={pressTap}
+              className="inline-flex items-center gap-2 bg-indigo-600 text-white px-6 py-3 rounded-xl font-semibold hover:bg-indigo-700 transition-colors text-sm shadow-lg shadow-indigo-200"
             >
-              View Projects <ArrowRight size={17} aria-hidden="true" />
-            </motion.a>
-            <motion.a
+              View Projects <ChevronRight size={15} />
+            </a>
+            <a
               href="#contact"
-              className="btn-outline"
-              whileHover={{ y: -3, scale: 1.02 }}
-              whileTap={pressTap}
+              className="inline-flex items-center gap-2 border-2 border-gray-900 text-gray-900 px-6 py-3 rounded-xl font-semibold hover:bg-gray-900 hover:text-white transition-all text-sm"
             >
-              Hire Me <Mail size={17} aria-hidden="true" />
-            </motion.a>
-            <motion.a
+              Hire Me <Mail size={15} />
+            </a>
+            <a
               href={resumePDF}
               download="Abhiraj_Singh_Resume.pdf"
-              className="btn-resume"
-              whileHover={{ y: -3, scale: 1.02 }}
-              whileTap={pressTap}
-              aria-label="Download Abhiraj Singh's Resume"
+              className="inline-flex items-center gap-2 bg-gray-100 text-gray-700 px-6 py-3 rounded-xl font-semibold hover:bg-gray-200 transition-colors text-sm"
+              aria-label="Download Resume"
             >
-              <Download size={17} aria-hidden="true" /> Resume
-            </motion.a>
+              <Download size={15} /> Resume
+            </a>
           </motion.div>
 
-          <motion.div className="hero-metrics" variants={staggerContainer(0.06)}>
-            {metrics.map((m) => (
-              <motion.div
-                key={m.label}
-                className="hero-metric-item"
-                variants={fadeUp}
-                whileHover={{ y: -4 }}
-              >
-                <span className="hero-metric-value">{m.value}</span>
-                <span className="hero-metric-label">{m.label}</span>
-              </motion.div>
+          {/* Metrics */}
+          <motion.div variants={itemIn} className="flex gap-8 pt-5 border-t border-gray-100">
+            {[
+              { v: '15+', l: 'Projects', c: 'text-black' },
+              { v: '5+',  l: 'Clients',  c: 'text-black' },
+              { v: '13+', l: 'Technologies', c: 'text-black' },
+            ].map((m) => (
+              <div key={m.l}>
+                <div className={`text-3xl font-black ${m.c}`}>{m.v}</div>
+                <div className="text-sm text-gray-600 mt-0.5 font-semibold">{m.l}</div>
+              </div>
             ))}
           </motion.div>
         </motion.div>
 
-        <motion.div className="hero-media" variants={heroMedia}>
-          <motion.div
-            className="hero-circle-frame"
-            onPointerMove={handleCardMove}
-            onPointerLeave={resetCardTilt}
-            style={{
-              rotateX: shouldReduceMotion ? 0 : rotateX,
-              rotateY: shouldReduceMotion ? 0 : rotateY,
-              transformPerspective: 1100,
-            }}
-            whileHover={shouldReduceMotion ? undefined : { y: -8, scale: 1.015 }}
-          >
-            {/* Outer glow ring */}
-            <div className="hero-circle-glow" aria-hidden="true" />
-            {/* Dark circle — image lives INSIDE so transparent pixels show dark bg */}
-            <div className="hero-circle-bg">
-              <img
-                src={heroProfileImage}
-                alt="Abhiraj Singh portrait"
-                className="hero-circle-photo"
-                width="960"
-                height="1200"
-                loading="eager"
-                decoding="async"
-                fetchPriority="high"
-                sizes="(max-width: 768px) 100vw, (max-width: 1024px) 45vw, 40vw"
-              />
-            </div>
-          </motion.div>
+        {/* Right Portrait Image */}
+        <motion.div
+          className="flex-shrink-0 flex justify-center"
+          initial={{ opacity: 0, scale: 0.95 }}
+          animate={{ opacity: 1, scale: 1 }}
+          transition={{ duration: 0.8, ease: [0.22, 1, 0.36, 1] }}
+        >
+          <div className="bg-white border border-gray-150 p-2.5 rounded-[2.2rem] shadow-md hover:shadow-xl hover:-translate-y-1 transition-all duration-300">
+            <img
+              src={heroImg}
+              alt="Abhiraj Singh portrait"
+              className="w-64 h-80 sm:w-80 sm:h-96 lg:w-[330px] lg:h-[410px] object-cover rounded-[1.7rem]"
+              width="330"
+              height="410"
+              loading="eager"
+              decoding="async"
+              fetchPriority="high"
+            />
+          </div>
         </motion.div>
-      </motion.div>
 
-      <motion.a
-        href="#about"
-        className="scroll-cue"
-        aria-label="Scroll to about section"
-        initial={{ opacity: 0, y: -4, x: '-50%' }}
-        animate={{ opacity: 1, y: [0, 8, 0], x: '-50%' }}
-        transition={{
-          opacity: { delay: 1.2, duration: 0.4 },
-          y: { delay: 1.2, duration: 2.2, repeat: Infinity, ease: 'easeInOut' },
-        }}
-      >
-        <span>Scroll</span>
-        <ChevronDown size={16} aria-hidden="true" />
-      </motion.a>
-    </motion.section>
+      </div>
+    </section>
   );
 }
