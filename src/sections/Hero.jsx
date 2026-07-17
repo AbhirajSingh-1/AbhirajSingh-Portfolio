@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
 import { motion } from 'framer-motion';
 import { ChevronRight, Download, Mail } from 'lucide-react';
-import heroImg from '../assets/projects/ME4.webp';
+const heroImg = '/ME4.webp';
 import resumePDF from '../assets/projects/Abhiraj_Singh_resume.pdf';
 
 const roles = [

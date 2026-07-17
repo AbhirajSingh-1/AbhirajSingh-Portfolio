@@ -12,5 +12,14 @@ export default defineConfig({
     minify: 'esbuild',
     cssMinify: true,
     chunkSizeWarningLimit: 600,
+    rollupOptions: {
+      output: {
+        manualChunks(id) {
+          if (id.includes('node_modules')) {
+            return 'vendor';
+          }
+        },
+      },
+    },
   },
 })
