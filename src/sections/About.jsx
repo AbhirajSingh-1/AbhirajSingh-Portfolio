@@ -350,7 +350,7 @@ export default function About() {
   }, []);
 
   useEffect(() => {
-    const timer = setInterval(goNext, 6000);
+    const timer = setInterval(goNext, 10000);
     return () => clearInterval(timer);
   }, [goNext]);
 
